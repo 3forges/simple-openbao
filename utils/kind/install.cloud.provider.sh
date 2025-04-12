@@ -1,0 +1,24 @@
+#!/bin/bash
+
+export KND_CLOUD_PROVIDER_VERSION=${KND_CLOUD_PROVIDER_VERSION:-'0.6.0'}
+
+export KND_CLOUD_PROVIDER_OS=${KND_CLOUD_PROVIDER_OS:-'linux'}
+export KND_CLOUD_PROVIDER_CPUARCH=${KND_CLOUD_PROVIDER_CPUARCH:-'amd64'}
+
+
+export KND_CLOUD_PROVIDER_DWNLD_LINK=${KND_CLOUD_PROVIDER_DWNLD_LINK:-"https://github.com/kubernetes-sigs/cloud-provider-kind/releases/download/v${KND_CLOUD_PROVIDER_VERSION}/cloud-provider-kind_${KND_CLOUD_PROVIDER_VERSION}_${KND_CLOUD_PROVIDER_OS}_${KND_CLOUD_PROVIDER_CPUARCH}.tar.gz"}
+
+
+if [ -d /tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/ ]; then
+  rm -fr /tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/
+fi;
+mkdir -p /tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/
+
+curl -LO ${KND_CLOUD_PROVIDER_DWNLD_LINK}
+
+tar -xzvf ./cloud-provider-kind_${KND_CLOUD_PROVIDER_VERSION}_${KND_CLOUD_PROVIDER_OS}_${KND_CLOUD_PROVIDER_CPUARCH}.tar.gz -C /tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/
+
+ls -alh /tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/
+
+sudo mkdir -p /usr/bin/cloud-provider-kind/${KND_CLOUD_PROVIDER_VERSION}/
+sudo mv cc /usr/bin/cloud-provider-kind/${KND_CLOUD_PROVIDER_VERSION}/
