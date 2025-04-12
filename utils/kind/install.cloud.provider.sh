@@ -20,5 +20,12 @@ tar -xzvf ./cloud-provider-kind_${KND_CLOUD_PROVIDER_VERSION}_${KND_CLOUD_PROVID
 
 ls -alh /tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/
 
-sudo mkdir -p /usr/bin/cloud-provider-kind/${KND_CLOUD_PROVIDER_VERSION}/
-sudo mv cc /usr/bin/cloud-provider-kind/${KND_CLOUD_PROVIDER_VERSION}/
+ls -alh /tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/cloud-provider-kind
+
+/tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/cloud-provider-kind version
+
+sudo mkdir -p /usr/bin/cloud-provider-kind-${KND_CLOUD_PROVIDER_VERSION}/
+sudo mv /tmp/KND_CLOUD_PROVIDER/${KND_CLOUD_PROVIDER_VERSION}/deflated/cloud-provider-kind /usr/bin/cloud-provider-kind-${KND_CLOUD_PROVIDER_VERSION}/
+
+sudo ln -s /usr/bin/cloud-provider-kind-${KND_CLOUD_PROVIDER_VERSION}/cloud-provider-kind /usr/bin/cloud-provider-kind
+cloud-provider-kind list-images
