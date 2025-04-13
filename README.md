@@ -15,6 +15,11 @@ kubectl --context kind-openbao-cluster get all
 * NEXT: <https://kind.sigs.k8s.io/docs/user/loadbalancer/>
 
 ```bash
+
+chmod +x ./utils/kind/cloud-provider-kind/provision.cloud.provider.sh
+
+./utils/kind/cloud-provider-kind/provision.cloud.provider.sh
+
 kubectl --context kind-openbao-cluster apply -f ./utils/kind/cloud-provider-kind/example.yaml
 ```
 
