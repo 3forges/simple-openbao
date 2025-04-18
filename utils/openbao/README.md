@@ -703,6 +703,51 @@ Code: 400. Errors:
 
 This is because I access the OpenBAO vault using a `kubectl port-forward`: it now time to set up the reverse proxy and re-run that test.
 
+see also roles in the OIDC setup: https://openbao.org/docs/auth/jwt/oidc-providers/kubernetes/#kubernetes
+
+## About the Ingress
+
+I did not see any external ip pending, and:
+
+* here there is something related to ingres / loadbalancer https://openbao.org/docs/platform/k8s/helm/terraform/#annotations
+*
+
+In [the helm chart values.yaml](https://openbao.github.io/openbao-helm/charts/openbao/values.yaml) there is something which might help:
+
+```Yaml
+  # Ingress allows ingress services to be created to allow external access
+  # from Kubernetes to access Vault pods.
+  # If deployment is on OpenShift, the following block is ignored.
+  # In order to expose the service, use the route section below
+  ingress:
+    enabled: false
+    labels: {}
+      # traffic: external
+    annotations: {}
+      # |
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+      #   or
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+
+    # Optionally use ingressClassName instead of deprecated annotation.
+    # See: https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation
+    ingressClassName: ""
+```
+
+And there is also this:
+
+```Yaml
+
+    # Configures the service type for the main Vault service.  Can be ClusterIP
+    # or NodePort.
+    #type: ClusterIP
+```
+
+But I think there shodl be an ingress controller in the Kubernetes CLuster, and an ingress route to the OpenBAO vault service, the ingress cotnroller will then be nginx for me, even if i will already have an nginx in the room zero
+
+
 ## References
 
 * The Helm Chart documentation:
