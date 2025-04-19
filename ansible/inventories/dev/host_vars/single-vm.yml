@@ -1,0 +1,8 @@
+ansible_connection: ssh
+ansible_user: "{{ operator_lx_user_name }}"
+ansible_password: "{{ operator_lx_user_pwd }}"
+ansible_become_pass: "{{ operator_lx_user_pwd }}"
+ansible_host: "192.168.1.13"
+ip_address: "192.168.1.13"
+vm_fqdn: "openbao.pesto.io"
+os_distribution: "debian12"

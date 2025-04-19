@@ -1,0 +1,114 @@
+---
+
+##########################################
+##########################################
+##########################################
+### Check role provided params
+
+- name: "Set fact desired Arkade version"
+  ansible.builtin.set_fact:
+    desired_arkade_version: "{{ arkade_version  | default('0.11.37') }}"
+
+desired_arkade_version: "{{ arkade_version  | default('0.11.37') }}"
+desired_arkade_os: "{{ arkade_os  | default('linux') }}"
+desired_arkade_cpu_arch: "{{ arkade_cpu_arch  | default('amd64') }}"
+
+##########################################
+##########################################
+##########################################
+### Check if Arkade must be re-installed
+
+- name: "Print fact [force_reinstall_arkade] should Arkade be Re-Installed even if already installed?"
+  ansible.builtin.debug:
+    var: force_reinstall_arkade
+    verbosity: 2
+  when: running_os == "debian12"
+
+- name: "Set fact Arkade force re-install"
+  ansible.builtin.set_fact:
+    force_reinstall: {{ force_reinstall_arkade | lower }}
+  when: running_os == "debian12"
+
+- name: "Uninstall Arkade if force re-install option is true"
+  become: true
+  ansible.builtin.shell: |
+    # -
+    export ARKADE_INSTALL_PATH=$(which arkade)
+    if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
+      exit 0
+    fi;
+    rm -f ${ARKADE_INSTALL_PATH}
+  register: is_arkade_already_installed_output
+  when: 
+    - running_os == "debian12"
+    - force_reinstall == "true"
+
+##########################################
+##########################################
+##########################################
+### Check if Arkade is already installed
+
+- name: "Check if Arkade is already installed"
+  ansible.builtin.shell: |
+    # -
+    export ARKADE_INSTALL_PATH=$(which arkade)
+    if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
+      export IS_ARKADE_ALREADY_INSTALLED="false"
+    else
+      if [ "${ARKADE_INSTALL_PATH}" == "/usr/bin/arkade" ]; then
+        export IS_ARKADE_ALREADY_INSTALLED="true"
+      fi;
+    fi;
+    echo "${IS_ARKADE_ALREADY_INSTALLED}"
+  register: is_arkade_already_installed_output
+  when: running_os == "debian12"
+
+- name: "Set fact is Arkade already Installed"
+  ansible.builtin.set_fact:
+    is_arkade_already_installed: {{ is_arkade_already_installed_output.stdout }}
+  when: running_os == "debian12"
+
+- name: "Print fact is Arkade already Installed"
+  ansible.builtin.debug:
+    var: is_arkade_already_installed
+    verbosity: 2
+  when: running_os == "debian12"
+##########################################
+##########################################
+##########################################
+### Arkade Installation https://arkade.dev
+
+- name: "Install Arkade"
+  become: true
+  ansible.builtin.shell: |
+    # -
+    export ARKADE_VERSION=${ARKADE_VERSION:-"{{ arkade_version  | default('0.11.37') }}"}
+    export ARKADE_OS=${ARKADE_OS:-"{{ arkade_os  | default('linux') }}"}
+    export ARKADE_CPUARCH=${ARKADE_CPUARCH:-"{{ arkade_cpu_arch  | default('amd64') }}"}
+    export ARKADE_DWNLD_LINK=${ARKADE_DWNLD_LINK:-"https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade"}
+    if [ -d /tmp/ARKADE/${ARKADE_VERSION}/deflated/ ]; then
+      rm -fr /tmp/ARKADE/${ARKADE_VERSION}/deflated/
+    fi;
+    mkdir -p /tmp/ARKADE/${ARKADE_VERSION}/deflated/
+    cd /tmp/ARKADE/${ARKADE_VERSION}/deflated/
+    curl -LO ${ARKADE_DWNLD_LINK}
+    ls -alh .
+    mkdir -p /usr/bin/arkade-${ARKADE_VERSION}/
+    mv ./arkade /usr/bin/arkade-${ARKADE_VERSION}/
+    chmod a+x /usr/bin/arkade-${ARKADE_VERSION}/arkade
+    ln -s /usr/bin/arkade-${ARKADE_VERSION}/arkade /usr/bin/arkade
+    arkade --version
+  register: install_arkade_output
+  when: 
+    - running_os == "debian12"
+    - is_arkade_already_installed == "false"
+- name: "Set fact stdout of Arkade Installation"
+  ansible.builtin.set_fact:
+    install_arkade_output_stdout: {{ install_arkade_output.stdout }}
+  when: running_os == "debian12"
+- name: "Print output of Arkade Installation"
+  ansible.builtin.debug:
+    var: install_arkade_output_stdout
+    verbosity: 2
+  when: running_os == "debian12"
+
