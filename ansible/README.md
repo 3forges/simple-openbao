@@ -33,6 +33,14 @@ docker pull ${ANSIBLE_IMG}
 
 
 cat <<EOF >./ansible.cmd.sh
+
+# ---
+# Ansible callback yaml requires 
+# the 'community.general' ansible collection to be installed 
+# - 
+# 
+ansible-galaxy collection install community.general
+
 export ANSIBLE_CALLBACKS_ENABLED=profile_tasks
 export ANSIBLE_STDOUT_CALLBACK=yaml 
 # export ANSIBLE_ROLES_PATH="\$(pwd)/ansible/roles"
