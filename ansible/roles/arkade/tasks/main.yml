@@ -29,7 +29,7 @@
 
 - name: "Set fact Arkade force re-install"
   ansible.builtin.set_fact:
-    force_reinstall: "{{ force_reinstall_arkade | lower | default('false') }}"
+    force_reinstall: "{{ force_reinstall_arkade | default(False) }}"
   
 - name: "Print fact [force_reinstall_arkade] should Arkade be Re-Installed even if already installed?"
   ansible.builtin.debug:
@@ -53,7 +53,8 @@
   register: is_arkade_already_installed_output
   when: 
     - running_os == "debian12"
-    - force_reinstall == "true"
+    - force_reinstall
+    # - force_reinstall == "true"
 
 ##########################################
 ##########################################
