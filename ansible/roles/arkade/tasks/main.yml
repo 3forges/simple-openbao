@@ -65,7 +65,7 @@
   ansible.builtin.shell: |
     # -
     export ARKADE_INSTALL_PATH=$(which arkade)
-    if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
+    if [ "${ARKADE_INSTALL_PATH}" == "" ]; then
       export IS_ARKADE_ALREADY_INSTALLED="false"
     else
       if [ "${ARKADE_INSTALL_PATH}" == "/usr/bin/arkade" ]; then
