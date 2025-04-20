@@ -119,10 +119,7 @@ networks:
     driver: bridge
 EOF
 
-#################
-##### OKAY I WILL TRY THAT FIRST VERSION:
-# I still need to geenerate the certs, and do all needed to 
-# place them in container image by docker volumes...
+
 cat <<EOF >./nginx.conf
 user  nginx;
 worker_processes  auto;
@@ -148,27 +145,18 @@ http {
 
     # include /etc/nginx/conf.d/*.conf;
     
-    upstream openbao {
+    upstream jupytherhub {
         ip_hash;
-        server $OPENBAO_KND_EXTERNAL_IP:443;
+        server $OPENBAO_KND_EXTERNAL_IP:80;
     }
 
     server {
-        # listen       80;
-        # listen  [::]:80;
-        listen       443 ssl;
-        listen  [::]:443 ssl;
+        listen       80;
+        listen  [::]:80;
         # server_name  localhost;
         # --- 
         # ${OPENBAO_FQDN}: i would then add in my [/etc/hosts] an entry to map it to the public IP of my VM
         server_name ${OPENBAO_FQDN};
-        ssl_certificate /etc/nginx/certs/${OPENBAO_FQDN}.cert;
-        ssl_certificate_key /etc/nginx/certs/${OPENBAO_FQDN}.key;
-        # ---
-        # Stronger than the default [ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;] see https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/
-        ssl_protocols TLSv1.2 TLSv1.3;
-        ssl_ciphers "HIGH:!aNULL:!MD5:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256";
-        ssl_prefer_server_ciphers on;
 
         # To allow special characters in headers
         ignore_invalid_headers off;
@@ -197,16 +185,8 @@ http {
             proxy_set_header Connection "upgrade";
             
             chunked_transfer_encoding off;
-            
-            # ---
-            #  I will for now assume that 
-            #  the connection between nginx 
-            #  and the reverse-proxied openbao service 
-            #  is NOT secured, and when I want to secure with https encryption that part too, I will use:
-            #  > This for MTLS (client TLS cert authentication, nginx authenticate to the reverse proxied server using a client cert) https://docs.nginx.com/nginx/admin-guide/security-controls/securing-http-traffic-upstream/
-            #  > Or something lighter: NGINX will just need to trust the TLS cert broadcasted by the reverse-proxied openbao 
-            # proxy_pass https://openbao;
-            proxy_pass http://openbao;
+
+            proxy_pass http://jupytherhub;
         }
     }
 }

@@ -12,8 +12,18 @@ Room zero is a revrse proxy, provisioned as a docker container, using, docker-co
 * the VM has one network adapter bound to a wifi physical netork interface.
 
 ```bash
-export KND_NET_NAME=${KND_NET_NAME:-'kind'}
-export ROOM_ZERO_BIND_ADDR=${ROOM_ZERO_BIND_ADDR:-'0.0.0.0'}
+export ROOM_ZERO_HOME=${ROOM_ZERO_HOME:-'~/.room.zero'}
+export ROOM_ZERO_BIND_ADDR=${ROOM_ZERO_BIND_ADDR:-'192.168.1.16'}
+# export ROOM_ZERO_BIND_ADDR=${ROOM_ZERO_BIND_ADDR:-'0.0.0.0'}
 export KND_NET_NAME=${KND_NET_NAME:-'kind'}
 export OPENBAO_FQDN=${OPENBAO_FQDN:-"openbao.pesto.io"}
+# export OPENBAO_FQDN=${OPENBAO_FQDN:-"openbao.pesto.io"}
+export ROOM_ZERO_CONTAINER_NAME=${ROOM_ZERO_CONTAINER_NAME:-'room_zero'}
 ```
+
+
+## References
+
+* https://dev.to/admantium/nginx-reverse-proxy-with-tls-encryption-3d54
+* https://docs.nginx.com/nginx/admin-guide/security-controls/securing-http-traffic-upstream/
+* https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/
