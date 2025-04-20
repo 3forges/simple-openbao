@@ -132,7 +132,7 @@
     mv ./arkade /usr/bin/arkade-${ARKADE_VERSION}/
     chmod a+x /usr/bin/arkade-${ARKADE_VERSION}/arkade
     ln -s /usr/bin/arkade-${ARKADE_VERSION}/arkade /usr/bin/arkade
-    arkade --version
+    arkade version
   register: install_arkade_output
   when: 
     - running_os == "debian12"
