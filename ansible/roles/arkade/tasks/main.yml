@@ -65,25 +65,29 @@
   ansible.builtin.shell: |
     # -
     export ARKADE_INSTALL_PATH=$(which arkade)
-    mkdir -p /tmp/some/file/that/does/not/
-    touch /tmp/some/file/that/does/not/exist
-    if [ -f /tmp/some/file/that/does/not/exist ]; then
-      echo "The [/tmp/some/file/that/does/not/exist] does exist its normal...."
-    fi;
-    if [ "THIS" != "THAT" ]; then
-      echo "THIS is not equal to THAT, wow"
-    fi;
-    echo "SHELL is [$SHELL]"
-    echo "ARKADE_INSTALL_PATH value is [${ARKADE_INSTALL_PATH}], wow"
-    if [ "x${ARKADE_INSTALL_PATH}" = "x" ]; then
-      echo "ARKADE_INSTALL_PATH value is the empty string, wow finally";
-    fi;
+    # mkdir -p /tmp/some/file/that/does/not/
+    # touch /tmp/some/file/that/does/not/exist
+    # if [ -f /tmp/some/file/that/does/not/exist ]; then
+    #   echo "The [/tmp/some/file/that/does/not/exist] does exist its normal...."
+    # fi;
+    # if [ "THIS" != "THAT" ]; then
+    #   echo "THIS is not equal to THAT, wow"
+    # fi;
+    # echo "SHELL is [$SHELL]"
+    # echo "ARKADE_INSTALL_PATH value is [${ARKADE_INSTALL_PATH}], wow"
+    # # --
+    # # This is crazy: just when you use ansible.builtin.shell, the equality of strings operator shoudl be '=', and not '==', or you end up with an error, ***
+    # if [ "x${ARKADE_INSTALL_PATH}" = "x" ]; then
+    #   echo "ARKADE_INSTALL_PATH value is the empty string, wow finally";
+    # fi;
     # if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
-    #   export IS_ARKADE_ALREADY_INSTALLED="false"
-    # fi;
+    if [ "x${ARKADE_INSTALL_PATH}" = "x" ]; then
+      export IS_ARKADE_ALREADY_INSTALLED="false"
+    fi;
     # if [ "${ARKADE_INSTALL_PATH}" == "/usr/bin/arkade" ]; then
-    #   export IS_ARKADE_ALREADY_INSTALLED="true"
-    # fi;
+    if [ "${ARKADE_INSTALL_PATH}" = "/usr/bin/arkade" ]; then
+      export IS_ARKADE_ALREADY_INSTALLED="true"
+    fi;
     echo "${IS_ARKADE_ALREADY_INSTALLED}"
   register: is_arkade_already_installed_output
   when: running_os == "debian12"
