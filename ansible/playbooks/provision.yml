@@ -7,7 +7,7 @@
     # ---
     # (Re-)Install Arkade
     - role: arkade
-      force_reinstall_arkade: 'true'
+      force_reinstall_arkade: true
       arkade_version: '0.11.38'
       arkade_os: 'linux'
       arkade_cpu_arch: 'amd64'

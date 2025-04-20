@@ -41,7 +41,7 @@
 ##########################################
 ### Un-Install Arkade must be re-installed
 
-- name: "Un-Install Arkade if force re-install option is true"
+- name: "Un-Install Arkade if force re-install option is true [force_reinstall=[{{ force_reinstall }}]]"
   become: true
   ansible.builtin.shell: |
     # -
