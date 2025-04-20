@@ -65,6 +65,10 @@
   ansible.builtin.shell: |
     # -
     export ARKADE_INSTALL_PATH=$(which arkade)
+    if [ -f /some/file/that/does/not/exist ]; then
+      mkdir -p /tmp/some/file/that/does/not/
+      echo "The [/tmp/some/file/that/does/not/exist] does exist its normal...."
+    fi;
     if [ "${ARKADE_INSTALL_PATH}" == "" ]; then
       export IS_ARKADE_ALREADY_INSTALLED="false"
     else
