@@ -4,12 +4,12 @@
 ##########################################
 ### Check role provided params
 
-- name: "Set fact desired Arkade version"
+- name: "Set fact desired cluster name"
   ansible.builtin.set_fact:
-    desired_arkade_version: "{{ arkade_version  | default('0.11.37') }}"
-- name: "Set fact desired Arkade OS"
+    desired_kind_cluster_name: "{{ kind_cluster_name  | default('0.11.37') }}"
+- name: "Set fact desired docker network name"
   ansible.builtin.set_fact:
-    desired_arkade_os: "{{ arkade_os  | default('linux') }}"
+    desired_kind_cluster_network_name: "{{ kind_cluster_network_name  | default('kind') }}"
 - name: "Set fact desired Arkade CPU Architecture"
   ansible.builtin.set_fact:
     desired_arkade_cpu_arch: "{{ arkade_cpu_arch  | default('amd64') }}"

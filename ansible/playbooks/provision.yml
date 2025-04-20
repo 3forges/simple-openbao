@@ -1,6 +1,6 @@
 ---
 - name: Provision OpenBAO
-  hosts: [kind-cluster]
+  hosts: [k8s-cluster]
   any_errors_fatal: true
   gather_facts: false
   roles:
@@ -9,5 +9,5 @@
     - role: arkade
       force_reinstall_arkade: true
       arkade_version: '0.11.38'
-      arkade_os: ''
-      arkade_cpu_arch: ''
+      arkade_os: 'linux'
+      arkade_cpu_arch: 'amd64'
