@@ -136,7 +136,8 @@
   register: install_arkade_output
   when: 
     - running_os == "debian12"
-    - is_arkade_already_installed == False
+    - not is_arkade_already_installed
+    # - is_arkade_already_installed == False
     # - is_arkade_already_installed == "false"
 
 # - name: "Print output of Arkade Installation"
@@ -152,13 +153,16 @@
     install_arkade_output_stdout: "{{ install_arkade_output.stdout }}"
   when: 
     - running_os == "debian12"
-    - is_arkade_already_installed == "false"
+    - not is_arkade_already_installed
+    # - is_arkade_already_installed == False
+    # - is_arkade_already_installed == "false"
 - name: "Print output of Arkade Installation"
   ansible.builtin.debug:
     var: install_arkade_output_stdout
     verbosity: 2
   when: 
     - running_os == "debian12"
-    - is_arkade_already_installed == False
+    - not is_arkade_already_installed
+    # - is_arkade_already_installed == False
     # - is_arkade_already_installed == "false"
 
