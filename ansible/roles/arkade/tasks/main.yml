@@ -136,7 +136,7 @@
   register: install_arkade_output
   when: 
     - running_os == "debian12"
-    - is_arkade_already_installed
+    - is_arkade_already_installed == False
     # - is_arkade_already_installed == "false"
 
 # - name: "Print output of Arkade Installation"
@@ -159,6 +159,6 @@
     verbosity: 2
   when: 
     - running_os == "debian12"
-    - is_arkade_already_installed
+    - is_arkade_already_installed == False
     # - is_arkade_already_installed == "false"
 
