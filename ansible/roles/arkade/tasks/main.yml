@@ -76,6 +76,12 @@
   register: is_arkade_already_installed_output
   when: running_os == "debian12"
 
+- name: "Print fact is_arkade_already_installed_output"
+  ansible.builtin.debug:
+    var: is_arkade_already_installed_output
+    verbosity: 2
+  when: running_os == "debian12"
+
 - name: "Set fact is Arkade already Installed"
   ansible.builtin.set_fact:
     is_arkade_already_installed: "{{ is_arkade_already_installed_output.stdout | lower }}"
