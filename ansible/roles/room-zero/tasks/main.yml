@@ -29,7 +29,7 @@
 
 - name: "Set fact Arkade force re-install"
   ansible.builtin.set_fact:
-    force_reinstall: {{ force_reinstall_arkade | lower | default('false') }}
+    force_reinstall: "{{ force_reinstall_arkade | default(False) }}"
   
 - name: "Print fact [force_reinstall_arkade] should Arkade be Re-Installed even if already installed?"
   ansible.builtin.debug:
@@ -41,7 +41,7 @@
 ##########################################
 ### Un-Install Arkade must be re-installed
 
-- name: "Un-Install Arkade if force re-install option is true"
+- name: "Un-Install Arkade if force re-install option is true [force_reinstall=[{{ force_reinstall }}]]"
   become: true
   ansible.builtin.shell: |
     # -
@@ -53,7 +53,8 @@
   register: is_arkade_already_installed_output
   when: 
     - running_os == "debian12"
-    - force_reinstall == "true"
+    - force_reinstall
+    # - force_reinstall == "true"
 
 ##########################################
 ##########################################
@@ -64,20 +65,42 @@
   ansible.builtin.shell: |
     # -
     export ARKADE_INSTALL_PATH=$(which arkade)
-    if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
+    # mkdir -p /tmp/some/file/that/does/not/
+    # touch /tmp/some/file/that/does/not/exist
+    # if [ -f /tmp/some/file/that/does/not/exist ]; then
+    #   echo "The [/tmp/some/file/that/does/not/exist] does exist its normal...."
+    # fi;
+    # if [ "THIS" != "THAT" ]; then
+    #   echo "THIS is not equal to THAT, wow"
+    # fi;
+    # echo "SHELL is [$SHELL]"
+    # echo "ARKADE_INSTALL_PATH value is [${ARKADE_INSTALL_PATH}], wow"
+    # # --
+    # # This is crazy: just when you use ansible.builtin.shell, the equality of strings operator shoudl be '=', and not '==', or you end up with an error, ***
+    # if [ "x${ARKADE_INSTALL_PATH}" = "x" ]; then
+    #   echo "ARKADE_INSTALL_PATH value is the empty string, wow finally";
+    # fi;
+    # if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
+    if [ "x${ARKADE_INSTALL_PATH}" = "x" ]; then
       export IS_ARKADE_ALREADY_INSTALLED="false"
-    else
-      if [ "${ARKADE_INSTALL_PATH}" == "/usr/bin/arkade" ]; then
-        export IS_ARKADE_ALREADY_INSTALLED="true"
-      fi;
+    fi;
+    # if [ "${ARKADE_INSTALL_PATH}" == "/usr/bin/arkade" ]; then
+    if [ "${ARKADE_INSTALL_PATH}" = "/usr/bin/arkade" ]; then
+      export IS_ARKADE_ALREADY_INSTALLED="true"
     fi;
     echo "${IS_ARKADE_ALREADY_INSTALLED}"
   register: is_arkade_already_installed_output
   when: running_os == "debian12"
 
+- name: "Print fact is_arkade_already_installed_output"
+  ansible.builtin.debug:
+    var: is_arkade_already_installed_output
+    verbosity: 2
+  when: running_os == "debian12"
+
 - name: "Set fact is Arkade already Installed"
   ansible.builtin.set_fact:
-    is_arkade_already_installed: {{ is_arkade_already_installed_output.stdout }}
+    is_arkade_already_installed: "{{ is_arkade_already_installed_output.stdout | lower }}"
   when: running_os == "debian12"
 
 - name: "Print fact is Arkade already Installed"
@@ -109,18 +132,37 @@
     mv ./arkade /usr/bin/arkade-${ARKADE_VERSION}/
     chmod a+x /usr/bin/arkade-${ARKADE_VERSION}/arkade
     ln -s /usr/bin/arkade-${ARKADE_VERSION}/arkade /usr/bin/arkade
-    arkade --version
+    arkade version
   register: install_arkade_output
   when: 
     - running_os == "debian12"
-    - is_arkade_already_installed == "false"
+    - not is_arkade_already_installed
+    # - is_arkade_already_installed == False
+    # - is_arkade_already_installed == "false"
+
+# - name: "Print output of Arkade Installation"
+#   ansible.builtin.debug:
+#     var: install_arkade_output
+#     verbosity: 2
+#   when: 
+#     - running_os == "debian12"
+#     - is_arkade_already_installed == "false"
+
 - name: "Set fact stdout of Arkade Installation"
   ansible.builtin.set_fact:
-    install_arkade_output_stdout: {{ install_arkade_output.stdout }}
-  when: running_os == "debian12"
+    install_arkade_output_stdout: "{{ install_arkade_output.stdout }}"
+  when: 
+    - running_os == "debian12"
+    - not is_arkade_already_installed
+    # - is_arkade_already_installed == False
+    # - is_arkade_already_installed == "false"
 - name: "Print output of Arkade Installation"
   ansible.builtin.debug:
     var: install_arkade_output_stdout
     verbosity: 2
-  when: running_os == "debian12"
+  when: 
+    - running_os == "debian12"
+    - not is_arkade_already_installed
+    # - is_arkade_already_installed == False
+    # - is_arkade_already_installed == "false"
 
