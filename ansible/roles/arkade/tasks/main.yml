@@ -114,13 +114,20 @@
   when: 
     - running_os == "debian12"
     - is_arkade_already_installed == "false"
-- name: "Set fact stdout of Arkade Installation"
-  ansible.builtin.set_fact:
-    install_arkade_output_stdout: "{{ install_arkade_output.stdout }}"
-  when: running_os == "debian12"
+
 - name: "Print output of Arkade Installation"
   ansible.builtin.debug:
-    var: install_arkade_output_stdout
+    var: install_arkade_output
     verbosity: 2
   when: running_os == "debian12"
+
+# - name: "Set fact stdout of Arkade Installation"
+#   ansible.builtin.set_fact:
+#     install_arkade_output_stdout: "{{ install_arkade_output.stdout }}"
+#   when: running_os == "debian12"
+# - name: "Print output of Arkade Installation"
+#   ansible.builtin.debug:
+#     var: install_arkade_output_stdout
+#     verbosity: 2
+#   when: running_os == "debian12"
 

@@ -45,6 +45,7 @@ export ANSIBLE_CALLBACKS_ENABLED=profile_tasks
 export ANSIBLE_STDOUT_CALLBACK=yaml 
 # export ANSIBLE_ROLES_PATH="\$(pwd)/ansible/roles"
 export ANSIBLE_ROLES_PATH="\$(pwd)/roles"
+export ANSIBLE_HOST_KEY_CHECKING=False
 
 ansible-playbook -vvv -i ./inventories/dev/hosts.yml \
   -e "my_var1=value1" \
