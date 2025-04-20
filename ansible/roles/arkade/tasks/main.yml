@@ -69,12 +69,11 @@
       mkdir -p /tmp/some/file/that/does/not/
       echo "The [/tmp/some/file/that/does/not/exist] does exist its normal...."
     fi;
-    if [ "${ARKADE_INSTALL_PATH}" == "" ]; then
+    if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
       export IS_ARKADE_ALREADY_INSTALLED="false"
-    else
-      if [ "${ARKADE_INSTALL_PATH}" == "/usr/bin/arkade" ]; then
-        export IS_ARKADE_ALREADY_INSTALLED="true"
-      fi;
+    fi;
+    if [ "${ARKADE_INSTALL_PATH}" == "/usr/bin/arkade" ]; then
+      export IS_ARKADE_ALREADY_INSTALLED="true"
     fi;
     echo "${IS_ARKADE_ALREADY_INSTALLED}"
   register: is_arkade_already_installed_output
