@@ -73,6 +73,9 @@
     if [ "THIS" != "THAT" ]; then
       echo "THIS is not equal to THAT, wow"
     fi;
+    if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
+      echo "ARKADE_INSTALL_PATH value is the empty string, wow"
+    fi;
     # if [ "x${ARKADE_INSTALL_PATH}" == "x" ]; then
     #   export IS_ARKADE_ALREADY_INSTALLED="false"
     # fi;
