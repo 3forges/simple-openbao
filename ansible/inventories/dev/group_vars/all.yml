@@ -2,3 +2,17 @@
 # arkade_os: 'linux'
 # arkade_cpu_arch: 'amd64'
 # # force_reinstall_arkade: ''
+
+##########################################
+### PKI CA Cert
+pesto_pki_ca_name: "Pestoplatform-RootCA"
+pesto_pki_ca_fqdn: 'pestoplaform-ca.pesto.io'
+pesto_pki_ca_validity_in_days: 1826
+pesto_pki_ca_passphrase: 'In that pleasant district of merry England which is watered by the river Don, there extended in ancient times a large forest, covering the greater part of the beautiful hills and valleys which lie between Sheffield and the pleasant town of Doncaster.'
+
+##########################################
+### Open BAO Cert
+pesto_openbao_cert_validity_in_days: 730
+pesto_openbao_fqdn: 'openbao.pesto.io'
+pesto_openbao_ip_address_1: 192.168.1.16
+pesto_openbao_ip_address_2: 192.168.1.17

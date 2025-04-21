@@ -11,3 +11,25 @@
       arkade_version: '0.11.38'
       arkade_os: 'linux'
       arkade_cpu_arch: 'amd64'
+    # ---
+    # PKI
+    - role: static_pki
+      # ---
+      pki_preparation_home: "{{ pesto_pki_preparation_home }}"
+      # ---
+      pki_ca_fqdn: "{{ pesto_pki_ca_fqdn }}"
+      pki_ca_name: "{{ pesto_pki_ca_name }}"
+      pki_ca_validity_in_days: "{{ pesto_pki_ca_validity_in_days }}"
+      pki_ca_passphrase: "{{ pesto_pki_ca_passphrase }}"
+      force_regenerate_ca: true
+      # ---
+      openbao_fqdn: "{{ pesto_openbao_fqdn }}"
+      openbao_ip_address_1: "{{ pesto_openbao_ip_address_1 }}"
+      openbao_ip_address_2: "{{ pesto_openbao_ip_address_2 }}"
+      openbao_cert_validity_in_days: "{{ pesto_openbao_cert_validity_in_days }}"
+      force_regenerate_openbao_cert: true
+
+
+
+
+
