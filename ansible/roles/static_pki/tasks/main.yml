@@ -202,7 +202,7 @@
 
 ##########################################
 ### 1./ Delete Existing PKI CA Cert when 
-#       the 'should_force_regenerate_ca' 
+#       the 'force_regenerate_ca' 
 #       option is set to True
 
 - name: "Delete Existing PKI CA Cert even if it already exists [should_force_regenerate_ca] = {{ should_force_regenerate_ca }}"
@@ -366,61 +366,6 @@
     - running_os == "debian12"
     # - not is_pki_already_prepared
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ##########################################
 ##########################################
 ##########################################
@@ -429,21 +374,19 @@
 ### 
 
 
-
-
 ##########################################
 ### 1./ Delete Existing OpenBAO TLS Cert 
-#       when the 'should_force_regenerate_ca' 
+#       when the 'force_regenerate_openbao_cert' 
 #       option is set to True
 
-- name: "Delete Existing OpenBAO TLS Cert even if it already exists [should_force_regenerate_ca] = {{ should_force_regenerate_ca }}"
+- name: "Delete Existing OpenBAO TLS Cert even if it already exists [should_force_regenerate_openbao_cert] = {{ should_force_regenerate_ca }}"
   become: true
   ansible.builtin.shell: |
     # -
     export PKI_PREPARATION_HOME="{{ desired_pki_preparation_home }}"
     ls -alh ${PKI_PREPARATION_HOME}
     export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
-    echo "The PKI CA Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
+    echo "The OpenBAO TLS Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated (set 'force_regenerate_openbao_cert' to 'true' if you want to force re-generating the CA Cert):"
     rm -fr ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
     mkdir -p ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
     ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
@@ -453,7 +396,7 @@
   register: delete_existing_ca_cert_output
   when: 
     - running_os == "debian12"
-    - should_force_regenerate_ca
+    - should_force_regenerate_openbao_cert
     # - not not should_force_regenerate_ca
 - name: "Print Delete Existing PKI CA Cert output"
   ansible.builtin.debug:
