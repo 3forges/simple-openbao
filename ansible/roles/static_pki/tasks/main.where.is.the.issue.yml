@@ -420,6 +420,20 @@
         export PESTO_OPENBAO_CERT_ALREADY_EXISTS='true'
       fi;
     fi;
+    
+    # ---
+    # FINALLY let's verify the OpenBAO generated TLS Cert, with the 
+    # CA Cert
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
+    export SILENCE_IT=$(openssl verify -verbose -CAfile $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt $OPENBAO_CERT_KEY_FILEPATH; echo "$?" > ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
+    export OPENBAO_CERT_OPENSSL_VERIFY_RC=$(cat ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
+    if [ "$OPENBAO_CERT_OPENSSL_VERIFY_RC" = "0" ]; then
+      if [ "$PESTO_OPENBAO_CERT_ALREADY_EXISTS" = "true" ]
+        export PESTO_OPENBAO_CERT_ALREADY_EXISTS="true"
+      else
+        export PESTO_OPENBAO_CERT_ALREADY_EXISTS="false"
+      fi;
+    fi;
     echo "$PESTO_OPENBAO_CERT_ALREADY_EXISTS"
   register: openbao_tls_cert_already_exists_output
   when: 
