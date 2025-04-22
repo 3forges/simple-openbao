@@ -388,14 +388,14 @@
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
-    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
+    export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
     echo "Delete The OpenBAO TLS Cert which already exists in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], to re-generate it, because 'force_regenerate_openbao_cert' is set to 'true':"
-    rm -fr $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/ || true
-    mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
-    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
-    # ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
-    # ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
-    
+    rm -fr $PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/ || true
+    mkdir -p $PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/
+    ls -alh $PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/
+    # ls -alh $PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.key
+    # ls -alh $PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.crt
+
   register: delete_existing_ca_cert_output
   when: 
     - running_os == "debian12"
