@@ -456,7 +456,6 @@
     # ---
     # Let's verify the OpenBAO generated TLS Cert, with the 
     # CA Cert
-    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     
   register: openbao_tls_cert_is_signed_by_ca_output
   when: 
