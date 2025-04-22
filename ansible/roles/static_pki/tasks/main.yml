@@ -464,7 +464,6 @@
     else
       export OPENBAO_CERT_OPENSSL_VERIFY_RC="false"
     fi;
-    echo "$OPENBAO_CERT_OPENSSL_VERIFY_RC"
   register: openbao_tls_cert_is_signed_by_ca_output
   when: 
     - running_os == "debian12"
