@@ -533,12 +533,12 @@
     {# ## 3./ Generate the OpenBAO TLS Cert, signed with the CA Cert Key (no private key is generated, since it was already generated at CSR time generation): #}
     
     openssl x509 -req -passin pass:"$PESTO_CA_PASSPHRASE" -in $OPENBAO_CERT_CSR_FILEPATH -CA $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt -CAkey $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key -CAcreateserial -out $OPENBAO_CERT_KEY_FILEPATH -days {{ desired_openbao_cert_validity_in_days }} -sha256 -extfile $OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH
-    
+
     ls -alh $OPENBAO_CERT_CRT_FILEPATH
     ls -alh $OPENBAO_CERT_KEY_FILEPATH
     ls -alh $OPENBAO_CERT_CSR_FILEPATH
     ls -alh $OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH
-    {# FINALLY let's verify the OpenBAO generated TLS Cert, with the  #}
+    {# ##/ FINALLY lets verify the OpenBAO generated TLS Cert with the  #}
     {# ## CA Cert #}
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     openssl verify -verbose -CAfile $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt $OPENBAO_CERT_KEY_FILEPATH
