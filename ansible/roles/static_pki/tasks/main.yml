@@ -123,20 +123,20 @@
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    echo " PKI_PREPARATION_HOME = [${PKI_PREPARATION_HOME}] "
+    echo " PKI_PREPARATION_HOME = [$PKI_PREPARATION_HOME] "
     
-    if [ -d ${PKI_PREPARATION_HOME} ]; then
-      echo "The [${PKI_PREPARATION_HOME}] folder already exists, and its content is:"
-      ls -alh ${PKI_PREPARATION_HOME}
+    if [ -d $PKI_PREPARATION_HOME ]; then
+      echo "The [$PKI_PREPARATION_HOME] folder already exists, and its content is:"
+      ls -alh $PKI_PREPARATION_HOME
     else
-      echo "The [${PKI_PREPARATION_HOME}] folder does not exists, so it will be created"
+      echo "The [$PKI_PREPARATION_HOME] folder does not exists, so it will be created"
     fi;
-    # if [ -d ${PKI_PREPARATION_HOME} ]; then
-    #   rm -fr ${PKI_PREPARATION_HOME}
+    # if [ -d $PKI_PREPARATION_HOME ]; then
+    #   rm -fr $PKI_PREPARATION_HOME
     # fi;
-    mkdir -p ${PKI_PREPARATION_HOME}
-    chown -R {{ operator_lx_user_name }}:{{ operator_lx_user_name }}  ${PKI_PREPARATION_HOME}
-    ls -alh ${PKI_PREPARATION_HOME}
+    mkdir -p $PKI_PREPARATION_HOME
+    chown -R {{ operator_lx_user_name }}:{{ operator_lx_user_name }}  $PKI_PREPARATION_HOME
+    ls -alh $PKI_PREPARATION_HOME
   register: create_pki_preparation_home_folder_output
   when: 
     - running_os == "debian12"
@@ -202,14 +202,14 @@
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    ls -alh ${PKI_PREPARATION_HOME}
+    ls -alh $PKI_PREPARATION_HOME
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    echo "The PKI CA Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
-    rm -fr ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
-    mkdir -p ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt
+    echo "The PKI CA Cert already exists in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
+    rm -fr $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
     
   register: delete_existing_ca_cert_output
   when: 
@@ -231,21 +231,21 @@
 - name: "Check if CA Cert already exists"
   become: true
   ansible.builtin.shell: |
-    if ! [ -f ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key ]; then
+    if ! [ -f $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key ]; then
       export PESTO_CA_CERT_ALREADY_EXISTS='false'
     else
       export PESTO_CA_CERT_ALREADY_EXISTS='true'
     fi;
-    if ! [ -f ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt ]; then
+    if ! [ -f $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt ]; then
       export PESTO_CA_CERT_ALREADY_EXISTS='false'
     else
-      if [ "${PESTO_CA_CERT_ALREADY_EXISTS}" = "false" ]; then
+      if [ "$PESTO_CA_CERT_ALREADY_EXISTS" = "false" ]; then
         export PESTO_CA_CERT_ALREADY_EXISTS='false'
       else
         export PESTO_CA_CERT_ALREADY_EXISTS='true'
       fi;
     fi;
-    echo "${PESTO_CA_CERT_ALREADY_EXISTS}"
+    echo "$PESTO_CA_CERT_ALREADY_EXISTS"
     
   register: pki_ca_cert_already_exists_output
   when: 
@@ -271,22 +271,22 @@
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    ls -alh ${PKI_PREPARATION_HOME}
+    ls -alh $PKI_PREPARATION_HOME
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
 
-    echo " PKI_PREPARATION_HOME = [${PKI_PREPARATION_HOME}] "
-    echo " PESTO_CA_SERVICE_FQDN = [${PESTO_CA_SERVICE_FQDN}] "
+    echo " PKI_PREPARATION_HOME = [$PKI_PREPARATION_HOME] "
+    echo " PESTO_CA_SERVICE_FQDN = [$PESTO_CA_SERVICE_FQDN] "
     echo " PKI CA validity in days = {{ desired_pki_ca_validity_in_days }}"
     # --- <<<>>>
     # Generate the Certificate Authority Private Key
     export PESTO_CA_NAME='{{ desired_pki_ca_name }}'
-    echo " PESTO_CA_NAME = [${PESTO_CA_NAME}]"
+    echo " PESTO_CA_NAME = [$PESTO_CA_NAME]"
     export PESTO_CA_PASSPHRASE='{{ desired_pki_ca_passphrase }}'
-    mkdir -p ${PKI_PREPARATION_HOME}/$PESTO_CA_NAME
+    mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_NAME
     
     # -
     # AES encrypted private key
-    openssl genrsa -passout pass:"$PESTO_CA_PASSPHRASE" -aes256 -out ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key 4096
+    openssl genrsa -passout pass:"$PESTO_CA_PASSPHRASE" -aes256 -out $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key 4096
     
     
     # --- <<<>>>
@@ -295,7 +295,7 @@
     # 
     
     # # (not sure yet I should set alt names for CA Cert)
-    # # openssl req -x509 -new -nodes -key ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key -passin pass:"$PESTO_CA_PASSPHRASE" -sha256 -days {{ desired_pki_ca_validity_in_days }} -out ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt -subj "/CN=${PESTO_CA_NAME}$/C=FR/ST=Chamalieres/L=Chamalieres/O=${PESTO_CA_SERVICE_FQDN}" -addext "subjectAltName = DNS:${PESTO_CA_SERVICE_FQDN}"
+    # # openssl req -x509 -new -nodes -key $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key -passin pass:"$PESTO_CA_PASSPHRASE" -sha256 -days {{ desired_pki_ca_validity_in_days }} -out $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt -subj "/CN=$PESTO_CA_NAME$/C=FR/ST=Chamalieres/L=Chamalieres/O=$PESTO_CA_SERVICE_FQDN" -addext "subjectAltName = DNS:$PESTO_CA_SERVICE_FQDN"
     
     
     # --
@@ -305,11 +305,11 @@
     # order to then, generate a TLS Certificate for the
     # OpenBAO Vault service provisioning: So at this 
     # time, the OpenBAO Vault is not yet available.
-    openssl req -x509 -new -nodes -key ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key -passin pass:"$PESTO_CA_PASSPHRASE" -sha256 -days 1826 -out ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt -subj "/CN=${PESTO_CA_NAME}$/C=FR/ST=Chamalieres/L=Chamalieres/O=${PESTO_CA_SERVICE_FQDN}"
-    echo "Generated PKI CA in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/]:"
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt
+    openssl req -x509 -new -nodes -key $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key -passin pass:"$PESTO_CA_PASSPHRASE" -sha256 -days 1826 -out $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt -subj "/CN=$PESTO_CA_NAME$/C=FR/ST=Chamalieres/L=Chamalieres/O=$PESTO_CA_SERVICE_FQDN"
+    echo "Generated PKI CA in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/]:"
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
   register: generate_ca_cert_output
   when: 
     - running_os == "debian12"
@@ -325,10 +325,10 @@
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    echo "The PKI CA Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt
+    echo "The PKI CA Cert already exists in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
     
   register: generate_ca_cert_output
   when: 
@@ -370,14 +370,14 @@
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    ls -alh ${PKI_PREPARATION_HOME}
+    ls -alh $PKI_PREPARATION_HOME
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    echo "The OpenBAO TLS Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated (set 'force_regenerate_openbao_cert' to 'true' if you want to force re-generating the CA Cert):"
-    rm -fr ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
-    mkdir -p ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key
-    ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt
+    echo "The OpenBAO TLS Cert already exists in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], it won't be re-generated (set 'force_regenerate_openbao_cert' to 'true' if you want to force re-generating the CA Cert):"
+    rm -fr $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
     
   register: delete_existing_ca_cert_output
   when: 
@@ -402,19 +402,19 @@
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
     
-    export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
-    export OPENBAO_CERT_KEY_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
-    export OPENBAO_CERT_CSR_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.csr
-    export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
-    if ! [ -f ${OPENBAO_CERT_CRT_FILEPATH} ]; then
+    export OPENBAO_CERT_CRT_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.key
+    export OPENBAO_CERT_KEY_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
+    export OPENBAO_CERT_CSR_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.csr
+    export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
+    if ! [ -f $OPENBAO_CERT_CRT_FILEPATH ]; then
       export PESTO_OPENBAO_CERT_ALREADY_EXISTS='false'
     else
       export PESTO_OPENBAO_CERT_ALREADY_EXISTS='true'
     fi;
-    if ! [ -f ${OPENBAO_CERT_KEY_FILEPATH} ]; then
+    if ! [ -f $OPENBAO_CERT_KEY_FILEPATH ]; then
       export PESTO_OPENBAO_CERT_ALREADY_EXISTS='false'
     else
-      if [ "${PESTO_OPENBAO_CERT_ALREADY_EXISTS}" = "false" ]; then
+      if [ "$PESTO_OPENBAO_CERT_ALREADY_EXISTS" = "false" ]; then
         export PESTO_OPENBAO_CERT_ALREADY_EXISTS='false'
       else
         export PESTO_OPENBAO_CERT_ALREADY_EXISTS='true'
@@ -425,16 +425,16 @@
     # FINALLY let's verify the OpenBAO generated TLS Cert, with the 
     # CA Cert
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    export SILENCE_IT=$(openssl verify -verbose -CAfile ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt ${OPENBAO_CERT_KEY_FILEPATH}; echo "$?" > ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
+    export SILENCE_IT=$(openssl verify -verbose -CAfile $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt $OPENBAO_CERT_KEY_FILEPATH; echo "$?" > ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
     export OPENBAO_CERT_OPENSSL_VERIFY_RC=$(cat ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
-    if [ "${OPENBAO_CERT_OPENSSL_VERIFY_RC}" = "0" ]; then
-      if [ "${PESTO_OPENBAO_CERT_ALREADY_EXISTS}" = "true" ]
+    if [ "$OPENBAO_CERT_OPENSSL_VERIFY_RC" = "0" ]; then
+      if [ "$PESTO_OPENBAO_CERT_ALREADY_EXISTS" = "true" ]
         export PESTO_OPENBAO_CERT_ALREADY_EXISTS="true"
       else
         export PESTO_OPENBAO_CERT_ALREADY_EXISTS="false"
       fi;
     fi;
-    echo "${PESTO_OPENBAO_CERT_ALREADY_EXISTS}"
+    echo "$PESTO_OPENBAO_CERT_ALREADY_EXISTS"
   register: openbao_tls_cert_already_exists_output
   when: 
     - running_os == "debian12"
@@ -462,24 +462,24 @@
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
     
-    export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
-    export OPENBAO_CERT_KEY_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
-    export OPENBAO_CERT_CSR_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.csr
-    export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
+    export OPENBAO_CERT_CRT_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.key
+    export OPENBAO_CERT_KEY_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
+    export OPENBAO_CERT_CSR_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.csr
+    export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
 
     # ---
     # Let's verify the OpenBAO generated TLS Cert, with the 
     # CA Cert
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    export SILENCE_IT=$(openssl verify -verbose -CAfile ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt ${OPENBAO_CERT_KEY_FILEPATH}; echo "$?" > ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
+    export SILENCE_IT=$(openssl verify -verbose -CAfile $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt $OPENBAO_CERT_KEY_FILEPATH; echo "$?" > ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
     export OPENBAO_CERT_OPENSSL_VERIFY_RC=$(cat ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
-    if [ "${OPENBAO_CERT_OPENSSL_VERIFY_RC}" = "0" ]; then
+    if [ "$OPENBAO_CERT_OPENSSL_VERIFY_RC" = "0" ]; then
       export OPENBAO_CERT_OPENSSL_VERIFY_RC="true"
     else
       export OPENBAO_CERT_OPENSSL_VERIFY_RC="false"
     fi;
-    echo "${OPENBAO_CERT_OPENSSL_VERIFY_RC}"
-    # exit ${OPENBAO_CERT_OPENSSL_VERIFY_RC}
+    echo "$OPENBAO_CERT_OPENSSL_VERIFY_RC"
+    # exit $OPENBAO_CERT_OPENSSL_VERIFY_RC
   register: openbao_tls_cert_is_signed_by_ca_output
   when: 
     - running_os == "debian12"
@@ -512,60 +512,60 @@
   ansible.builtin.shell: |
     # -
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    ls -alh ${PKI_PREPARATION_HOME}
+    ls -alh $PKI_PREPARATION_HOME
 
     export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
     
-    export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
-    export OPENBAO_CERT_KEY_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
-    export OPENBAO_CERT_CSR_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.csr
-    export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
+    export OPENBAO_CERT_CRT_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.key
+    export OPENBAO_CERT_KEY_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
+    export OPENBAO_CERT_CSR_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.csr
+    export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
     
-    echo " PKI_PREPARATION_HOME = [${PKI_PREPARATION_HOME}] "
-    echo " OPENBAO_SERVICE_FQDN = [${OPENBAO_SERVICE_FQDN}] "
-    echo " OPENBAO_CERT_CRT_FILEPATH = [${OPENBAO_CERT_CRT_FILEPATH}] "
-    echo " OPENBAO_CERT_KEY_FILEPATH = [${OPENBAO_CERT_KEY_FILEPATH}] "
-    echo " OPENBAO_CERT_CSR_FILEPATH = [${OPENBAO_CERT_CSR_FILEPATH}] "
-    echo " OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH = [${OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH}] "
+    echo " PKI_PREPARATION_HOME = [$PKI_PREPARATION_HOME] "
+    echo " OPENBAO_SERVICE_FQDN = [$OPENBAO_SERVICE_FQDN] "
+    echo " OPENBAO_CERT_CRT_FILEPATH = [$OPENBAO_CERT_CRT_FILEPATH] "
+    echo " OPENBAO_CERT_KEY_FILEPATH = [$OPENBAO_CERT_KEY_FILEPATH] "
+    echo " OPENBAO_CERT_CSR_FILEPATH = [$OPENBAO_CERT_CSR_FILEPATH] "
+    echo " OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH = [$OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH] "
     echo " desired_openbao_cert_validity_in_days = [{{ desired_openbao_cert_validity_in_days }}]"
 
     # 1./ Generate the TLS Certificate Signing Request for OpenBAO
-    openssl req -new -nodes -out ${OPENBAO_CERT_CSR_FILEPATH} -newkey rsa:4096 -keyout ${OPENBAO_CERT_CRT_FILEPATH} -subj "/CN=${OPENBAO_SERVICE_FQDN}/C=FR/ST=Chamalieres/L=Chamalieres/O=${OPENBAO_SERVICE_FQDN}"
+    openssl req -new -nodes -out $OPENBAO_CERT_CSR_FILEPATH -newkey rsa:4096 -keyout $OPENBAO_CERT_CRT_FILEPATH -subj "/CN=$OPENBAO_SERVICE_FQDN/C=FR/ST=Chamalieres/L=Chamalieres/O=$OPENBAO_SERVICE_FQDN"
     
     # 2./ Generate the v3 ext file for SAN properties for OpenBAO
     export OPENBAO_SERVICE_IP_ADDR_1='{{ desired_openbao_ip_address_1 }}'
     export OPENBAO_SERVICE_IP_ADDR_2='{{ desired_openbao_ip_address_2 }}'
-    echo " OPENBAO_SERVICE_IP_ADDR_1=[${OPENBAO_SERVICE_IP_ADDR_1}] "
-    echo " OPENBAO_SERVICE_IP_ADDR_2=[${OPENBAO_SERVICE_IP_ADDR_2}] "
+    echo " OPENBAO_SERVICE_IP_ADDR_1=[$OPENBAO_SERVICE_IP_ADDR_1] "
+    echo " OPENBAO_SERVICE_IP_ADDR_2=[$OPENBAO_SERVICE_IP_ADDR_2] "
     
-    cat > ${OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH} << EOF
+    cat > $OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH << EOF
     authorityKeyIdentifier=keyid,issuer
     basicConstraints=CA:FALSE
     keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
     subjectAltName = @alt_names
     [alt_names]
-    DNS.1 = ${OPENBAO_SERVICE_FQDN}
+    DNS.1 = $OPENBAO_SERVICE_FQDN
     DNS.2 = openbao.local
-    IP.1 = ${OPENBAO_SERVICE_IP_ADDR_1}
-    IP.2 = ${OPENBAO_SERVICE_IP_ADDR_2}
+    IP.1 = $OPENBAO_SERVICE_IP_ADDR_1
+    IP.2 = $OPENBAO_SERVICE_IP_ADDR_2
     EOF
     
     # 3./ Generate the OpenBAO TLS Cert, signed with the CA Cert Key (no private key is generated, since it was already generated at CSR time generation):
     
-    openssl x509 -req -passin pass:"$PESTO_CA_PASSPHRASE" -in ${OPENBAO_CERT_CSR_FILEPATH} -CA ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt -CAkey ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key -CAcreateserial -out ${OPENBAO_CERT_KEY_FILEPATH} -days {{ desired_openbao_cert_validity_in_days }} -sha256 -extfile ${OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH}
+    openssl x509 -req -passin pass:"$PESTO_CA_PASSPHRASE" -in $OPENBAO_CERT_CSR_FILEPATH -CA $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt -CAkey $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key -CAcreateserial -out $OPENBAO_CERT_KEY_FILEPATH -days {{ desired_openbao_cert_validity_in_days }} -sha256 -extfile $OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH
     
     # files generated are:
     
-    ls -alh ${OPENBAO_CERT_CRT_FILEPATH}
-    ls -alh ${OPENBAO_CERT_KEY_FILEPATH}
-    ls -alh ${OPENBAO_CERT_CSR_FILEPATH}
-    ls -alh ${OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH}
+    ls -alh $OPENBAO_CERT_CRT_FILEPATH
+    ls -alh $OPENBAO_CERT_KEY_FILEPATH
+    ls -alh $OPENBAO_CERT_CSR_FILEPATH
+    ls -alh $OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH
     
     # ---
     # FINALLY let's verify the OpenBAO generated TLS Cert, with the 
     # CA Cert
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    openssl verify -verbose -CAfile ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt ${OPENBAO_CERT_KEY_FILEPATH}
+    openssl verify -verbose -CAfile $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt $OPENBAO_CERT_KEY_FILEPATH
   register: generate_openbao_cert_output
   when: 
     - running_os == "debian12"
@@ -599,34 +599,34 @@
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    ls -alh ${PKI_PREPARATION_HOME}
+    ls -alh $PKI_PREPARATION_HOME
 
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
     
-    export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
-    export OPENBAO_CERT_KEY_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
-    export OPENBAO_CERT_CSR_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.csr
-    export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
+    export OPENBAO_CERT_CRT_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.key
+    export OPENBAO_CERT_KEY_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
+    export OPENBAO_CERT_CSR_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.csr
+    export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
     
-    echo " PKI_PREPARATION_HOME = [${PKI_PREPARATION_HOME}] "
-    echo " OPENBAO_SERVICE_FQDN = [${OPENBAO_SERVICE_FQDN}] "
-    echo " OPENBAO_CERT_CRT_FILEPATH = [${OPENBAO_CERT_CRT_FILEPATH}] "
-    echo " OPENBAO_CERT_KEY_FILEPATH = [${OPENBAO_CERT_KEY_FILEPATH}] "
-    echo " OPENBAO_CERT_CSR_FILEPATH = [${OPENBAO_CERT_CSR_FILEPATH}] "
-    echo " OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH = [${OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH}] "
-    echo " PESTO_CA_SERVICE_FQDN = [${PESTO_CA_SERVICE_FQDN}] "
+    echo " PKI_PREPARATION_HOME = [$PKI_PREPARATION_HOME] "
+    echo " OPENBAO_SERVICE_FQDN = [$OPENBAO_SERVICE_FQDN] "
+    echo " OPENBAO_CERT_CRT_FILEPATH = [$OPENBAO_CERT_CRT_FILEPATH] "
+    echo " OPENBAO_CERT_KEY_FILEPATH = [$OPENBAO_CERT_KEY_FILEPATH] "
+    echo " OPENBAO_CERT_CSR_FILEPATH = [$OPENBAO_CERT_CSR_FILEPATH] "
+    echo " OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH = [$OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH] "
+    echo " PESTO_CA_SERVICE_FQDN = [$PESTO_CA_SERVICE_FQDN] "
     
     ######################################
     ## Generate helper to trust the CA on 
     ## any GNU/Linux machine
 
-    cat <<EOF >${PKI_PREPARATION_HOME}/trusting.ca.sh
+    cat <<EOF >$PKI_PREPARATION_HOME/trusting.ca.sh
     setUpVaultBAOAlias () {
     # ---
     # requires to sudo
     export BAO_CLI_EXECUTABLE_LOCATION=$(which bao)
-    sudo ln -s ${BAO_CLI_EXECUTABLE_LOCATION} /usr/bin/vault
+    sudo ln -s $BAO_CLI_EXECUTABLE_LOCATION /usr/bin/vault
     vault --version
     
     }
@@ -636,14 +636,14 @@
     
     trustCAforDebianDerivedDistribs() {
     
-    export VAULT_ADDR="https://${OPENBAO_SERVICE_FQDN}"
-    export BAO_ADDR="${VAULT_ADDR}"
+    export VAULT_ADDR="https://$OPENBAO_SERVICE_FQDN"
+    export BAO_ADDR="$VAULT_ADDR"
     # ---
     # https://openbao.org/docs/auth/jwt/oidc-providers/keycloak/
     vault login -method=oidc -path=keycloak role=pesto-default
     
     export PESTO_CA_CERT_BASE64_ENCODED=$(vault kv get -field=ca-crt -mount=apps/pesto/kv/nonprod /pesto/pki/ca-cert)
-    echo "${PESTO_CA_KEY_BASE64_ENCODED}" | base64 -d | tee ./pestoplatform.ca.crt
+    echo "$PESTO_CA_KEY_BASE64_ENCODED" | base64 -d | tee ./pestoplatform.ca.crt
     
     sudo apt-get install -y ca-certificates
     sudo cp ./pestoplatform.ca.crt /usr/local/share/ca-certificates
@@ -652,14 +652,14 @@
     
     trustCAforRedhatDistribs() {
     
-    export VAULT_ADDR="https://${OPENBAO_SERVICE_FQDN}"
-    export BAO_ADDR="${VAULT_ADDR}"
+    export VAULT_ADDR="https://$OPENBAO_SERVICE_FQDN"
+    export BAO_ADDR="$VAULT_ADDR"
     # ---
     # https://openbao.org/docs/auth/jwt/oidc-providers/keycloak/
     vault login -method=oidc -path=keycloak role=pesto-default
     
     export PESTO_CA_CERT_BASE64_ENCODED=$(vault kv get -field=ca-crt -mount=apps/pesto/kv/nonprod /pesto/pki/ca-cert)
-    echo "${PESTO_CA_KEY_BASE64_ENCODED}" | base64 -d | tee ./pestoplatform.ca.crt
+    echo "$PESTO_CA_KEY_BASE64_ENCODED" | base64 -d | tee ./pestoplatform.ca.crt
     
     sudo cp ./pestoplatform.ca.crt /etc/pki/ca-trust/source/anchors/pestoplatform.ca.crt
     sudo update-ca-trust
