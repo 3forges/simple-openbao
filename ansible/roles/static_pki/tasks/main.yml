@@ -348,6 +348,7 @@
   when: 
     - running_os == "debian12"
     - pki_ca_cert_already_exists
+    - not should_force_regenerate_ca
     # - not not pki_ca_cert_already_exists
 
 - name: "Set fact stdout of CA Cert Generation"
@@ -356,6 +357,7 @@
   when: 
     - running_os == "debian12"
     - pki_ca_cert_already_exists
+    - not should_force_regenerate_ca
 - name: "Print stdout of CA Cert Generation"
   ansible.builtin.debug:
     var: generate_ca_cert_stdout
@@ -363,6 +365,7 @@
   when: 
     - running_os == "debian12"
     - pki_ca_cert_already_exists
+    - not should_force_regenerate_ca
 
   
 
@@ -592,27 +595,28 @@
     ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
     ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
     
-  register: generate_ca_cert_output
+  register: generate_openbao_cert_output
   when: 
     - running_os == "debian12"
     - openbao_tls_cert_already_exists
-    - force_regenerate_openbao_cert
+    - not force_regenerate_openbao_cert
     # - not not pki_ca_cert_already_exists
 
 - name: "Set fact stdout of CA Cert Generation"
   ansible.builtin.set_fact:
-    generate_ca_cert_stdout: "{{ generate_ca_cert_output.stdout }}"
+    generate_openbao_cert_stdout: "{{ generate_openbao_cert_output.stdout }}"
   when: 
     - running_os == "debian12"
     - openbao_tls_cert_already_exists
-    - force_regenerate_openbao_cert
+    - not force_regenerate_openbao_cert
 - name: "Print stdout of CA Cert Generation"
   ansible.builtin.debug:
-    var: generate_ca_cert_stdout
+    var: generate_openbao_cert_stdout
     verbosity: 2
   when: 
     - running_os == "debian12"
-    - pki_ca_cert_already_exists
+    - openbao_tls_cert_already_exists
+    - not force_regenerate_openbao_cert
 
   
 
