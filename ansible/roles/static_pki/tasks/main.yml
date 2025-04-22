@@ -279,9 +279,9 @@
     echo " PKI CA validity in days = {{ desired_pki_ca_validity_in_days }}"
     # --- <<<>>>
     # Generate the Certificate Authority Private Key
-    export PESTO_CA_NAME="{{ desired_pki_ca_name }}"
+    export PESTO_CA_NAME='{{ desired_pki_ca_name }}'
     echo " PESTO_CA_NAME = [${PESTO_CA_NAME}]"
-    export PESTO_CA_PASSPHRASE="{{ desired_pki_ca_passphrase }}"
+    export PESTO_CA_PASSPHRASE='{{ desired_pki_ca_passphrase }}'
     mkdir -p ${PKI_PREPARATION_HOME}/$PESTO_CA_NAME
     
     # -
@@ -400,7 +400,7 @@
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
+    export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
     
     export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
     export OPENBAO_CERT_KEY_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
@@ -460,7 +460,7 @@
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
+    export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
     
     export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
     export OPENBAO_CERT_KEY_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
@@ -514,7 +514,7 @@
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
 
-    export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
+    export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
     
     export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
     export OPENBAO_CERT_KEY_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
@@ -533,8 +533,8 @@
     openssl req -new -nodes -out ${OPENBAO_CERT_CSR_FILEPATH} -newkey rsa:4096 -keyout ${OPENBAO_CERT_CRT_FILEPATH} -subj "/CN=${OPENBAO_SERVICE_FQDN}/C=FR/ST=Chamalieres/L=Chamalieres/O=${OPENBAO_SERVICE_FQDN}"
     
     # 2./ Generate the v3 ext file for SAN properties for OpenBAO
-    export OPENBAO_SERVICE_IP_ADDR_1="{{ desired_openbao_ip_address_1 }}"
-    export OPENBAO_SERVICE_IP_ADDR_2="{{ desired_openbao_ip_address_2 }}"
+    export OPENBAO_SERVICE_IP_ADDR_1='{{ desired_openbao_ip_address_1 }}'
+    export OPENBAO_SERVICE_IP_ADDR_2='{{ desired_openbao_ip_address_2 }}'
     echo " OPENBAO_SERVICE_IP_ADDR_1=[${OPENBAO_SERVICE_IP_ADDR_1}] "
     echo " OPENBAO_SERVICE_IP_ADDR_2=[${OPENBAO_SERVICE_IP_ADDR_2}] "
     
@@ -602,7 +602,7 @@
     ls -alh ${PKI_PREPARATION_HOME}
 
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
+    export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
     
     export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
     export OPENBAO_CERT_KEY_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
