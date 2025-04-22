@@ -454,7 +454,7 @@
     export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
 
     # ---
-    # Let's verify the OpenBAO generated TLS Cert, with the 
+    # Lets verify the OpenBAO generated TLS Cert with the 
     # CA Cert
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     
