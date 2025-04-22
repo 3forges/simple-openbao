@@ -17,55 +17,53 @@
 
 ##########################################
 ### PKI CA (Certificate Autority)
-- name: "Set fact desired  PKI CA (Certificate Autority) FQDN"
+- name: "Set fact desired  PKI CA - Certificate Autority - FQDN"
   ansible.builtin.set_fact:
     desired_pki_ca_fqdn: "{{ pki_ca_fqdn  | default('openbao.pesto.io') }}"
 
-- name: "Print fact desired  PKI CA (Certificate Autority) FQDN"
+- name: "Print fact desired  PKI CA - Certificate Autority - FQDN"
   ansible.builtin.debug:
     var: desired_pki_ca_fqdn
     verbosity: 2
 
-- name: "Set fact desired PKI CA (Certificate Autority) Name"
+- name: "Set fact desired PKI CA - Certificate Autority - Name"
   ansible.builtin.set_fact:
     desired_pki_ca_name: "{{ pki_ca_name  | default('') }}"
 
-- name: "Print fact desired PKI CA (Certificate Autority) Name"
+- name: "Print fact desired PKI CA - Certificate Autority - Name"
   ansible.builtin.debug:
     var: desired_pki_ca_name
     verbosity: 2
 
 # ---
 # 1826 days = 5 years
-- name: "Set fact desired PKI CA (Certificate Autority) Certificate validity duration (integer, in days)"
+- name: "Set fact desired PKI CA - Certificate Autority - Certificate validity duration (integer, in days)"
   ansible.builtin.set_fact:
     desired_pki_ca_validity_in_days: "{{ pki_ca_validity_in_days  | default('1826') }}"
-- name: "Print fact desired PKI CA (Certificate Autority) Certificate validity duration (integer, in days)"
+- name: "Print fact desired PKI CA - Certificate Autority - Certificate validity duration (integer, in days)"
   ansible.builtin.debug:
     var: desired_pki_ca_validity_in_days
     verbosity: 2
 
-- name: "Set fact desired PKI CA (Certificate Autority) passphrase"
+- name: "Set fact desired PKI CA - Certificate Autority - passphrase"
   ansible.builtin.set_fact:
     desired_pki_ca_passphrase: "{{ pki_ca_passphrase  | default('') }}"
 
-- name: "Print fact desired PKI CA (Certificate Autority) passphrase (should NOT be printed in production)"
+- name: "Print fact desired PKI CA - Certificate Autority - passphrase - should NOT be printed in production"
   ansible.builtin.debug:
     var: desired_openbao_fqdn
     verbosity: 2
   # when: 
   #   - not is_production
 
-- name: "Set fact Should the PKI CA (Certificate Autority) Cert be re-generated?"
+- name: "Set fact Should the PKI CA - Certificate Autority - Cert be re-generated?"
   ansible.builtin.set_fact:
     should_force_regenerate_ca: "{{ force_regenerate_ca  | default('false') }}"
 
-- name: "Print fact Should the PKI CA (Certificate Autority) Cert be re-generated?"
+- name: "Print fact Should the PKI CA - Certificate Autority - Cert be re-generated?"
   ansible.builtin.debug:
     var: should_force_regenerate_ca
     verbosity: 2
-
-
 
 ##########################################
 ### Open BAO
@@ -78,7 +76,6 @@
   ansible.builtin.debug:
     var: desired_openbao_fqdn
     verbosity: 2
-
 
 - name: "Set fact desired OpenBAO IP Address 1"
   ansible.builtin.set_fact:
@@ -98,11 +95,9 @@
     var: desired_openbao_ip_address_2
     verbosity: 2
 
-
-
 # ---
 # 730 days = 2 years
-- name: "Set fact desired OpenBAO Certificate validity duration (integer, in days)"
+- name: "Set fact desired OpenBAO Certificate validity duration - integer, in days"
   ansible.builtin.set_fact:
     desired_openbao_cert_validity_in_days: "{{ openbao_cert_validity_in_days  | default('365') }}"
 - name: "Print fact desired OpenBAO Certificate validity duration (integer, in days)"
@@ -110,8 +105,7 @@
     var: desired_openbao_cert_validity_in_days
     verbosity: 2
 
-
-- name: "Set fact Should the OpenBAO Cert be re-generated?"
+- name: "Set fact Should the OpenBAO Cert be re-generated"
   ansible.builtin.set_fact:
     should_force_regenerate_openbao_cert: "{{ force_regenerate_openbao_cert  | default('false') }}"
 
@@ -205,7 +199,7 @@
 #       the 'force_regenerate_ca' 
 #       option is set to True
 
-- name: "Delete Existing PKI CA Cert even if it already exists [should_force_regenerate_ca] = {{ should_force_regenerate_ca }}"
+- name: "Delete Existing PKI CA Cert even if it already exists should_force_regenerate_ca value is {{ should_force_regenerate_ca }}"
   become: true
   ansible.builtin.shell: |
     # -
@@ -277,7 +271,7 @@
 ##########################################
 ### 3./ Generate PKI CA Cert (if it does not already exist)
 
-- name: "Generate PKI CA Cert (if it does not already exist)"
+- name: "Generate PKI CA Cert - if it does not already exist"
   become: true
   ansible.builtin.shell: |
     # -
@@ -379,7 +373,7 @@
 #       when the 'force_regenerate_openbao_cert' 
 #       option is set to True
 
-- name: "Delete Existing OpenBAO TLS Cert even if it already exists [should_force_regenerate_openbao_cert] = {{ should_force_regenerate_ca }}"
+- name: "Delete Existing OpenBAO TLS Cert even if it already exists should_force_regenerate_openbao_cert value is {{ should_force_regenerate_ca }}"
   become: true
   ansible.builtin.shell: |
     # -
@@ -410,7 +404,7 @@
 ##########################################
 ### 2./ Check if OpenBAO TLS Cert already exists
 
-- name: "Check if OpenBAO TLS Cert already exists (and if it is signed by PKI CA Cert)"
+- name: "Check if OpenBAO TLS Cert already exists - and if it is signed by PKI CA Cert"
   become: true
   ansible.builtin.shell: |
     # ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key
