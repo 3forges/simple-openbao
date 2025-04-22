@@ -282,7 +282,7 @@
     export PESTO_CA_NAME='{{ desired_pki_ca_name }}'
     echo " PESTO_CA_NAME = [$PESTO_CA_NAME]"
     export PESTO_CA_PASSPHRASE='{{ desired_pki_ca_passphrase }}'
-    mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_NAME
+    mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN
     
     # -
     # AES encrypted private key
