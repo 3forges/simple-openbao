@@ -204,7 +204,7 @@
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    echo "The PKI CA Cert already exists in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
+    echo "Deleting The existing PKI CA Cert in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], to re-generate it because set 'force_regenerate_ca' is set to 'true':"
     rm -fr $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/ || true
     mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
     ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
@@ -386,12 +386,12 @@
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    echo "The OpenBAO TLS Cert already exists in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], it won't be re-generated (set 'force_regenerate_openbao_cert' to 'true' if you want to force re-generating the CA Cert):"
-    rm -fr $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    echo "Delete The OpenBAO TLS Cert which already exists in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], to re-generate it, because 'force_regenerate_openbao_cert' is set to 'true':"
+    rm -fr $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/ || true
     mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
     ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
-    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
-    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
+    # ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
+    # ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
     
   register: delete_existing_ca_cert_output
   when: 
@@ -456,7 +456,7 @@
 ### 3./ Check if existing OpenBAO TLS Cert
 ###     is signed by CA Cert Key
 
-- name: "Check if OpenBAO TLS Cert is signed by CA Cert Key"
+- name: "Check if existing OpenBAO TLS Cert is signed by CA Cert Key"
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
@@ -481,14 +481,14 @@
     - openbao_tls_cert_already_exists
     # - not not openbao_tls_cert_already_exists
 
-- name: "Set fact OpenBAO TLS Cert is signed by CA Cert Key"
+- name: "Set fact existing OpenBAO TLS Cert is signed by CA Cert Key"
   ansible.builtin.set_fact:
     openbao_tls_cert_is_signed_by_ca: "{{ openbao_tls_cert_is_signed_by_ca_output.stdout }}"
   when: 
     - running_os == "debian12"
     - openbao_tls_cert_already_exists
     # - not not openbao_tls_cert_already_exists
-- name: "Print fact OpenBAO TLS Cert is signed by CA Cert Key"
+- name: "Print fact existing OpenBAO TLS Cert is signed by CA Cert Key"
   ansible.builtin.debug:
     var: openbao_tls_cert_is_signed_by_ca
     verbosity: 2
@@ -502,8 +502,8 @@
 ###     by CA Cert (if it does not 
 ###     already exist)
 
-- name: "Generate OpenBAO TLS Cert signed by CA Cert"
-  become: true
+- name: "Generate OpenBAO TLS Cert signed by CA Cert - if it does not already exist"
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
@@ -566,7 +566,7 @@
     generate_openbao_cert_stdout: "{{ generate_openbao_cert_output.stdout }}"
   when: 
     - running_os == "debian12"
-    # - not is_pki_already_prepared
+    - not openbao_tls_cert_already_exists
 - name: "Print stdout of OpenBAO TLS Cert Generation"
   ansible.builtin.debug:
     var: generate_openbao_cert_stdout
@@ -575,6 +575,46 @@
     - running_os == "debian12"
     - not openbao_tls_cert_already_exists
 
+
+##########################################
+### 5./ If OpenBAO Cert already 
+###     exists, don't generate it, just
+###     output an info message that it does
+
+- name: "Do not Generate OpenBAO Cert if it already exists"
+  become: true
+  ansible.builtin.shell: |
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
+    export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
+    echo "The OpenBAO Cert already exists in [$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/], it won't be re-generated (set 'force_regenerate_openbao_cert' to 'true' if you want to force re-generating the CA Cert):"
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
+    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
+    
+  register: generate_ca_cert_output
+  when: 
+    - running_os == "debian12"
+    - openbao_tls_cert_already_exists
+    - force_regenerate_openbao_cert
+    # - not not pki_ca_cert_already_exists
+
+- name: "Set fact stdout of CA Cert Generation"
+  ansible.builtin.set_fact:
+    generate_ca_cert_stdout: "{{ generate_ca_cert_output.stdout }}"
+  when: 
+    - running_os == "debian12"
+    - openbao_tls_cert_already_exists
+    - force_regenerate_openbao_cert
+- name: "Print stdout of CA Cert Generation"
+  ansible.builtin.debug:
+    var: generate_ca_cert_stdout
+    verbosity: 2
+  when: 
+    - running_os == "debian12"
+    - pki_ca_cert_already_exists
+
+  
 
 
 
