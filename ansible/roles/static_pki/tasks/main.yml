@@ -315,6 +315,20 @@
     - running_os == "debian12"
     - not pki_ca_cert_already_exists
 
+- name: "Set fact stdout of CA Cert Generation"
+  ansible.builtin.set_fact:
+    generate_ca_cert_stdout: "{{ generate_ca_cert_output.stdout }}"
+  when: 
+    - running_os == "debian12"
+    - not pki_ca_cert_already_exists
+- name: "Print stdout of CA Cert Generation"
+  ansible.builtin.debug:
+    var: generate_ca_cert_stdout
+    verbosity: 2
+  when: 
+    - running_os == "debian12"
+    - not pki_ca_cert_already_exists
+
 ##########################################
 ### 3./ If PKI CA Cert already 
 ###     exists, don't generate it, just
@@ -336,22 +350,22 @@
     - pki_ca_cert_already_exists
     # - not not pki_ca_cert_already_exists
 
-
-
-  
 - name: "Set fact stdout of CA Cert Generation"
   ansible.builtin.set_fact:
     generate_ca_cert_stdout: "{{ generate_ca_cert_output.stdout }}"
   when: 
     - running_os == "debian12"
-    # - not is_pki_already_prepared
+    - pki_ca_cert_already_exists
 - name: "Print stdout of CA Cert Generation"
   ansible.builtin.debug:
     var: generate_ca_cert_stdout
     verbosity: 2
   when: 
     - running_os == "debian12"
-    # - not is_pki_already_prepared
+    - pki_ca_cert_already_exists
+
+  
+
 
 ##########################################
 ##########################################
