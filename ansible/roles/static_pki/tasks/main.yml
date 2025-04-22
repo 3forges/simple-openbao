@@ -491,7 +491,6 @@
 - name: "Generate OpenBAO TLS Cert signed by CA Cert"
   become: true
   ansible.builtin.shell: |
-    # -
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
 
@@ -510,10 +509,10 @@
     echo " OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH = [$OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH] "
     echo " desired_openbao_cert_validity_in_days = [{{ desired_openbao_cert_validity_in_days }}]"
 
-    # 1./ Generate the TLS Certificate Signing Request for OpenBAO
+    ## 1./ Generate the TLS Certificate Signing Request for OpenBAO
     openssl req -new -nodes -out $OPENBAO_CERT_CSR_FILEPATH -newkey rsa:4096 -keyout $OPENBAO_CERT_CRT_FILEPATH -subj "/CN=$OPENBAO_SERVICE_FQDN/C=FR/ST=Chamalieres/L=Chamalieres/O=$OPENBAO_SERVICE_FQDN"
     
-    # 2./ Generate the v3 ext file for SAN properties for OpenBAO
+    ## 2./ Generate the v3 ext file for SAN properties for OpenBAO
     export OPENBAO_SERVICE_IP_ADDR_1='{{ desired_openbao_ip_address_1 }}'
     export OPENBAO_SERVICE_IP_ADDR_2='{{ desired_openbao_ip_address_2 }}'
     echo " OPENBAO_SERVICE_IP_ADDR_1=[$OPENBAO_SERVICE_IP_ADDR_1] "
@@ -531,20 +530,20 @@
     IP.2 = $OPENBAO_SERVICE_IP_ADDR_2
     EOF
     
-    # 3./ Generate the OpenBAO TLS Cert, signed with the CA Cert Key (no private key is generated, since it was already generated at CSR time generation):
+    ## 3./ Generate the OpenBAO TLS Cert, signed with the CA Cert Key (no private key is generated, since it was already generated at CSR time generation):
     
     openssl x509 -req -passin pass:"$PESTO_CA_PASSPHRASE" -in $OPENBAO_CERT_CSR_FILEPATH -CA $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt -CAkey $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key -CAcreateserial -out $OPENBAO_CERT_KEY_FILEPATH -days {{ desired_openbao_cert_validity_in_days }} -sha256 -extfile $OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH
     
-    # files generated are:
+    ## files generated are:
     
     ls -alh $OPENBAO_CERT_CRT_FILEPATH
     ls -alh $OPENBAO_CERT_KEY_FILEPATH
     ls -alh $OPENBAO_CERT_CSR_FILEPATH
     ls -alh $OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH
     
-    # ---
-    # FINALLY let's verify the OpenBAO generated TLS Cert, with the 
-    # CA Cert
+    ## ---
+    ## FINALLY let's verify the OpenBAO generated TLS Cert, with the 
+    ## CA Cert
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     openssl verify -verbose -CAfile $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt $OPENBAO_CERT_KEY_FILEPATH
   register: generate_openbao_cert_output
