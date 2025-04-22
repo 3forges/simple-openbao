@@ -233,13 +233,11 @@
 - name: "Check if CA Cert already exists"
   become: true
   ansible.builtin.shell: |
-    # ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key
     if ! [ -f ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key ]; then
       export PESTO_CA_CERT_ALREADY_EXISTS='false'
     else
       export PESTO_CA_CERT_ALREADY_EXISTS='true'
     fi;
-    # ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt
     if ! [ -f ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt ]; then
       export PESTO_CA_CERT_ALREADY_EXISTS='false'
     else
