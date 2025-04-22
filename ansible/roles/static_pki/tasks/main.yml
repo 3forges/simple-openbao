@@ -203,7 +203,7 @@
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
-    export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     echo "The PKI CA Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
     rm -fr ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
     mkdir -p ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
@@ -272,7 +272,7 @@
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
-    export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
 
     echo " PKI_PREPARATION_HOME = [${PKI_PREPARATION_HOME}] "
     echo " PESTO_CA_SERVICE_FQDN = [${PESTO_CA_SERVICE_FQDN}] "
@@ -324,7 +324,7 @@
   become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
-    export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     echo "The PKI CA Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
     ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
     ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.key
@@ -371,7 +371,7 @@
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
-    export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     echo "The OpenBAO TLS Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated (set 'force_regenerate_openbao_cert' to 'true' if you want to force re-generating the CA Cert):"
     rm -fr ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
     mkdir -p ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
@@ -424,7 +424,7 @@
     # ---
     # FINALLY let's verify the OpenBAO generated TLS Cert, with the 
     # CA Cert
-    export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     export SILENCE_IT=$(openssl verify -verbose -CAfile ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt ${OPENBAO_CERT_KEY_FILEPATH}; echo "$?" > ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
     export OPENBAO_CERT_OPENSSL_VERIFY_RC=$(cat ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
     if [ "${OPENBAO_CERT_OPENSSL_VERIFY_RC}" = "0" ]; then
@@ -470,7 +470,7 @@
     # ---
     # Let's verify the OpenBAO generated TLS Cert, with the 
     # CA Cert
-    export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     export SILENCE_IT=$(openssl verify -verbose -CAfile ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt ${OPENBAO_CERT_KEY_FILEPATH}; echo "$?" > ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
     export OPENBAO_CERT_OPENSSL_VERIFY_RC=$(cat ./OPENBAO_CERT_OPENSSL_VERIFY_RC.code)
     if [ "${OPENBAO_CERT_OPENSSL_VERIFY_RC}" = "0" ]; then
@@ -564,7 +564,7 @@
     # ---
     # FINALLY let's verify the OpenBAO generated TLS Cert, with the 
     # CA Cert
-    export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     openssl verify -verbose -CAfile ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/${PESTO_CA_SERVICE_FQDN}.crt ${OPENBAO_CERT_KEY_FILEPATH}
   register: generate_openbao_cert_output
   when: 
@@ -601,7 +601,7 @@
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
 
-    export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
+    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
     
     export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
