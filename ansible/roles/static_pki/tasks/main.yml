@@ -164,7 +164,7 @@
 ### 
 
 - name: "Check OpenSSL version"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     # -
     openssl version
@@ -199,7 +199,7 @@
 #       option is set to True
 
 - name: "Delete Existing PKI CA Cert even if it already exists should_force_regenerate_ca value is {{ should_force_regenerate_ca }}"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
@@ -229,7 +229,7 @@
 ### 2./ Check if CA Cert already exists
 
 - name: "Check if CA Cert already exists"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     if ! [ -f $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key ]; then
       export PESTO_CA_CERT_ALREADY_EXISTS='false'
@@ -268,7 +268,7 @@
 ### 3./ Generate PKI CA Cert (if it does not already exist)
 
 - name: "Generate PKI CA Cert - if it does not already exist"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
@@ -335,7 +335,7 @@
 ###     output an info message that it does
 
 - name: "Do not Generate PKI CA Cert if it already exists"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
@@ -384,7 +384,7 @@
 #       option is set to True
 
 - name: "Delete Existing OpenBAO TLS Cert even if it already exists should_force_regenerate_openbao_cert value is {{ should_force_regenerate_ca }}"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
@@ -414,7 +414,7 @@
 ### 2./ Check if OpenBAO TLS Cert already exists
 
 - name: "Check if OpenBAO TLS Cert already exists - and if it is signed by PKI CA Cert"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
@@ -460,7 +460,7 @@
 ###     is signed by CA Cert Key
 
 - name: "Check if existing OpenBAO TLS Cert is signed by CA Cert Key"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export OPENBAO_SERVICE_FQDN='{{ desired_openbao_fqdn }}'
@@ -586,7 +586,7 @@
 ###     output an info message that it does
 
 - name: "Do not Generate OpenBAO Cert if it already exists"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
@@ -631,7 +631,7 @@
 
 
 - name: "Generate Helper to Trust CA"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh $PKI_PREPARATION_HOME
