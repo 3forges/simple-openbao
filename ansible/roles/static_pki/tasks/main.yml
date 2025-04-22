@@ -205,11 +205,11 @@
     ls -alh $PKI_PREPARATION_HOME
     export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
     echo "The PKI CA Cert already exists in [$PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
-    rm -fr $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
+    rm -fr $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/ || true
     mkdir -p $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
     ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/
-    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
-    ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
+    # ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.key
+    # ls -alh $PKI_PREPARATION_HOME/$PESTO_CA_SERVICE_FQDN/$PESTO_CA_SERVICE_FQDN.crt
     
   register: delete_existing_ca_cert_output
   when: 
