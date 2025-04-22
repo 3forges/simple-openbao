@@ -452,12 +452,7 @@
     export OPENBAO_CERT_KEY_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.tls.crt
     export OPENBAO_CERT_CSR_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.csr
     export OPENBAO_CERT_CSR_V3_SAN_PROPS_FILEPATH=$PKI_PREPARATION_HOME/$OPENBAO_SERVICE_FQDN/$OPENBAO_SERVICE_FQDN.v3.ext
-
-    # ---
-    # Lets verify the OpenBAO generated TLS Cert with the 
-    # CA Cert
-    export PESTO_CA_SERVICE_FQDN='{{ desired_pki_ca_fqdn }}'
-    
+        
   register: openbao_tls_cert_is_signed_by_ca_output
   when: 
     - running_os == "debian12"
