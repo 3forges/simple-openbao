@@ -122,8 +122,7 @@
 - name: "Create PKI Preparation Home Folder"
   become: true
   ansible.builtin.shell: |
-    # -
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     echo " PKI_PREPARATION_HOME = [${PKI_PREPARATION_HOME}] "
     
     if [ -d ${PKI_PREPARATION_HOME} ]; then
@@ -202,8 +201,7 @@
 - name: "Delete Existing PKI CA Cert even if it already exists should_force_regenerate_ca value is {{ should_force_regenerate_ca }}"
   become: true
   ansible.builtin.shell: |
-    # -
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
     export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
     echo "The PKI CA Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
@@ -272,8 +270,7 @@
 - name: "Generate PKI CA Cert - if it does not already exist"
   become: true
   ansible.builtin.shell: |
-    # -
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
     export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
 
@@ -326,8 +323,7 @@
 - name: "Do not Generate PKI CA Cert if it already exists"
   become: true
   ansible.builtin.shell: |
-    # -
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
     echo "The PKI CA Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated ('set force_regenerate_ca' to 'true' if you want to force re-generating the CA Cert):"
     ls -alh ${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/
@@ -373,8 +369,7 @@
 - name: "Delete Existing OpenBAO TLS Cert even if it already exists should_force_regenerate_openbao_cert value is {{ should_force_regenerate_ca }}"
   become: true
   ansible.builtin.shell: |
-    # -
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
     export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
     echo "The OpenBAO TLS Cert already exists in [${PKI_PREPARATION_HOME}/${PESTO_CA_SERVICE_FQDN}/], it won't be re-generated (set 'force_regenerate_openbao_cert' to 'true' if you want to force re-generating the CA Cert):"
@@ -404,7 +399,7 @@
 - name: "Check if OpenBAO TLS Cert already exists - and if it is signed by PKI CA Cert"
   become: true
   ansible.builtin.shell: |
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
     
     export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
@@ -464,7 +459,7 @@
 - name: "Check if OpenBAO TLS Cert is signed by CA Cert Key"
   become: true
   ansible.builtin.shell: |
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
     
     export OPENBAO_CERT_CRT_FILEPATH=${PKI_PREPARATION_HOME}/$OPENBAO_SERVICE_FQDN/${OPENBAO_SERVICE_FQDN}.tls.key
@@ -516,7 +511,7 @@
   become: true
   ansible.builtin.shell: |
     # -
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
 
     export OPENBAO_SERVICE_FQDN="{{ desired_openbao_fqdn }}"
@@ -603,8 +598,7 @@
 - name: "Generate Helper to Trust CA"
   become: true
   ansible.builtin.shell: |
-    # -
-    export PKI_PREPARATION_HOME={{ desired_pki_preparation_home }}
+    export PKI_PREPARATION_HOME='{{ desired_pki_preparation_home }}'
     ls -alh ${PKI_PREPARATION_HOME}
 
     export PESTO_CA_SERVICE_FQDN="{{ desired_pki_ca_fqdn }}"
