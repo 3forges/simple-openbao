@@ -29,14 +29,16 @@ chmod +x ~/.room.zero.env.sh
 source ~/.room.zero.env.sh
 
 # export OPENBAO_KND_EXTERNAL_IP=$(cat ~/.room.zero.env.sh | grep 'OPENBAO_KND_EXTERNAL_IP' | awk -F '=' '{ print $NF }')
-
-export OPENBAO_KND_EXTERNAL_IP=$(kubectl -n pesto \
-  get services \
-  -l component=proxy-public,app=openbao \
+# ---
+# The Ip Address of the OpenBAO Service will be the External IP of the Ngonx Ingress Controller 
+export OPENBAO_KND_EXTERNAL_IP=$(kubectl --context kind-openbao-cluster \
+  -n ingress-nginx get services \
+  -l app.kubernetes.io/instance=ingress-nginx \
+  -l app.kubernetes.io/component=controller \
+  --field-selector spec.type=LoadBalancer \
   -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
 
 echo "OPENBAO_KND_EXTERNAL_IP=[${OPENBAO_KND_EXTERNAL_IP}]"
-
 
 
 # ---
@@ -91,6 +93,29 @@ if [ "x${OPENBAO_FQDN}" == "x" ]; then
   exit 7
 fi;
 
+# --- Certificate files
+if [ "x${OPENBAO_TLS_CERT_PATH}" == "x" ]; then
+  echo "ERROR!!! The 'OPENBAO_TLS_CERT_PATH' env. var. is not set!"
+  exit 7
+fi;
+
+if ! [ -f ${OPENBAO_TLS_CERT_PATH} ]; then
+  echo "ERROR - The OPENBAO_TLS_CERT_PATH=[${OPENBAO_TLS_CERT_PATH}] file does not exist, itmust exist"
+  exit 23
+fi;
+
+if [ "x${OPENBAO_TLS_CERT_KEY_PATH}" == "x" ]; then
+  echo "ERROR!!! The 'OPENBAO_TLS_CERT_KEY_PATH' env. var. is not set!"
+  exit 7
+fi;
+
+if ! [ -f ${OPENBAO_TLS_CERT_KEY_PATH} ]; then
+  echo "ERROR - The OPENBAO_TLS_CERT_KEY_PATH=[${OPENBAO_TLS_CERT_KEY_PATH}] file does not exist, itmust exist"
+  exit 23
+fi;
+
+
+
 
 # figlet 'Room Zero'
 
@@ -106,6 +131,8 @@ services:
     container_name: ${ROOM_ZERO_CONTAINER_NAME}
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${OPENBAO_TLS_CERT_PATH}:/etc/nginx/certs/${OPENBAO_FQDN}.cert:ro
+      - ${OPENBAO_TLS_CERT_KEY_PATH}:/etc/nginx/certs/${OPENBAO_FQDN}.key:ro
     ports:
       - "${ROOM_ZERO_BIND_ADDR}:80:80"
       # - "${ROOM_ZERO_BIND_ADDR}:8081:80"
@@ -221,8 +248,3 @@ sleep 3s
 figlet 'Connect Room Zero'
 
 docker network connect "${KND_NET_NAME}" "${ROOM_ZERO_CONTAINER_NAME}"
-
-
-
-
-
