@@ -19,7 +19,7 @@
 ### PKI CA (Certificate Autority)
 - name: "Set fact desired  PKI CA - Certificate Autority - FQDN"
   ansible.builtin.set_fact:
-    desired_pki_ca_fqdn: "{{ pki_ca_fqdn  | default('openbao.pesto.io') }}"
+    desired_pki_ca_fqdn: "{{ pki_ca_fqdn  | default('pki-ca.pesto.io') }}"
 
 - name: "Print fact desired  PKI CA - Certificate Autority - FQDN"
   ansible.builtin.debug:

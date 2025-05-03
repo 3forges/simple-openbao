@@ -39,8 +39,8 @@
       knd_net_name: "{{ pesto_knd_net_name }}"
       openbao_fqdn: "{{ pesto_openbao_fqdn }}"
       room_zero_container_name: "{{ pesto_room_zero_container_name }}"
-      openbao_tls_cert_path: "{{ pesto_openbao_tls_cert_path }}"
-      openbao_tls_cert_key_path: "{{ pesto_openbao_tls_cert_key_path }}"
+      openbao_tls_cert_path: "{{ pesto_room_zero_home }}/{{ pesto_openbao_fqdn }}.tls.crt"
+      openbao_tls_cert_key_path: "{{ pesto_room_zero_home }}/{{ pesto_openbao_fqdn }}/{{ pesto_openbao_fqdn }}.tls.key"
       # room_zero_docker_compose_file_name: "{{ pesto_room_zero_docker_compose_file_name }}"
 
 
