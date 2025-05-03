@@ -481,7 +481,7 @@
         
         upstream openbao {
             ip_hash;
-            server $OPENBAO_KND_EXTERNAL_IP:443;
+            server $OPENBAO_KND_EXTERNAL_IP:80;
         }
     
         server {
