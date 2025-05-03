@@ -22,7 +22,8 @@ pesto_openbao_ip_address_2: 192.168.1.17
 ### Room Zero
 
 # desired_room_zero_home: "~/.room.zero"
-pesto_room_zero_home: "~/.room.zero"
+# pesto_room_zero_home: "~/.room.zero"
+pesto_room_zero_home: "/opt/pesto/.room.zero"
 
 # desired_room_zero_bind_addr: "192.168.1.16"
 pesto_room_zero_bind_addr: "192.168.1.16"

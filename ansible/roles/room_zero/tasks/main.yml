@@ -350,7 +350,7 @@
 ### Provision Room Zero
 ### 
 - name: "Provision Room Zero"
-  become: true
+  # become: true
   ansible.builtin.shell: |
     export DESIRED_ROOM_ZERO_HOME='{{ desired_room_zero_home }}'
     echo " DESIRED_ROOM_ZERO_HOME = [${DESIRED_ROOM_ZERO_HOME}] "
