@@ -40,7 +40,7 @@ pesto_knd_net_name: "kind"
 # desired_openbao_fqdn: "openbao.pesto.io"
 pesto_room_zero_container_name: "room_zero"
 
-# desired_room_zero_container_name: "room_zero"
+# pesto_openbao_tls_cert_path: "room_zero"
 pesto_openbao_tls_cert_path: "{{ room_zero_home }}/openbao.pesto.io.cert"
 
 # desired_openbao_tls_cert_path: "{{ room_zero_home }}/openbao.pesto.io.cert"
