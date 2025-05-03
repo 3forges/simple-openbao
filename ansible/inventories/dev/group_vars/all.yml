@@ -27,6 +27,9 @@ pesto_room_zero_home: "~/.room.zero"
 # desired_room_zero_bind_addr: "192.168.1.16"
 pesto_room_zero_bind_addr: "192.168.1.16"
 
+# desired_pesto_room_zero_non_routed_ip_addr
+pesto_room_zero_non_routed_ip_addr: '172.20.0.5'
+
 # desired_knd_net_name: "kind"
 pesto_knd_net_name: "kind"
 
