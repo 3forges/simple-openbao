@@ -1,0 +1,54 @@
+
+
+
+##########################################
+##########################################
+##########################################
+### Provision Ingress Controller (NGINX)
+### 
+- name: "Provision Ingress Controller - NGINX"
+  # become: true
+  ansible.builtin.shell: |
+    export DESIRED_INGRESS_CONTROLLER_K8S_NS='{{ desired_ingress_controller_k8s_ns | default('ingress-nginx') }}'
+    echo " DESIRED_INGRESS_CONTROLLER_K8S_NS = [${DESIRED_INGRESS_CONTROLLER_K8S_NS}] "
+    export DESIRED_INGRESS_CONTROLLER_HELM_RELEASE_NAME='{{ desired_ingress_controller_helm_release_name | default('ingress-nginx') }}'
+    echo " DESIRED_INGRESS_CONTROLLER_HELM_RELEASE_NAME = [${DESIRED_INGRESS_CONTROLLER_HELM_RELEASE_NAME}] "
+    export DESIRED_INGRESS_CONTROLLER_HELM_REPO_NAME='{{ desired_ingress_controller_helm_repo_name | default('ingress-nginx') }}'
+    echo " DESIRED_INGRESS_CONTROLLER_HELM_REPO_NAME = [${DESIRED_INGRESS_CONTROLLER_HELM_REPO_NAME}] "
+    export DESIRED_INGRESS_CONTROLLER_HELM_REPO_URL='{{ desired_ingress_controller_helm_repo_name | default('https://kubernetes.github.io/ingress-nginx') }}'
+    echo " DESIRED_INGRESS_CONTROLLER_HELM_REPO_URL = [${DESIRED_INGRESS_CONTROLLER_HELM_REPO_NAME}] "
+    helm upgrade --install ${DESIRED_INGRESS_CONTROLLER_HELM_RELEASE_NAME} ${DESIRED_INGRESS_CONTROLLER_HELM_REPO_NAME} \
+      --repo ${DESIRED_INGRESS_CONTROLLER_HELM_REPO_URL} \
+      --namespace ${DESIRED_INGRESS_CONTROLLER_K8S_NS} --create-namespace
+  register: provision_ingress_controller_ouput
+  when: 
+    - running_os == "debian12"
+- name: "Print stdout of Provision Ingress Controller - NGINX"
+  ansible.builtin.debug:
+    var: provision_ingress_controller_ouput
+    verbosity: 2
+  when: 
+    - running_os == "debian12"
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: openbao-ingress
+  namespace: pesto-openbao
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "openbao.pesto.io"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: pesto-openbao
+            port:
+              number: 8200

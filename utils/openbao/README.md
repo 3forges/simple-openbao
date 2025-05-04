@@ -753,3 +753,22 @@ But I think there shodl be an ingress controller in the Kubernetes CLuster, and 
 * The Helm Chart documentation:
   * 
 * The helm chart `values.yaml`: https://openbao.github.io/openbao-helm/charts/openbao/values.yaml
+
+
+
+## From windows machine
+
+```bash
+
+export BAO_ADDR="https://openbao.pesto.io"
+export BAO_TOKEN="root"
+export BAO_SKIP_VERIFY=true
+
+bao auth list
+
+# ---
+# Create a first user
+bao auth enable userpass
+bao write auth/userpass/users/pesto password="pesto"
+
+```
