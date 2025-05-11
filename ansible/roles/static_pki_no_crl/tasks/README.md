@@ -66,8 +66,8 @@ EOF
 
 echo '01' > ./pestoplaform-ca.pesto.io.crlnumber
 
-# openssl ca -config ./pestoplaform-ca.pesto.io.crl.conf \
-# -gencrl -crldays 365 -crl_hold holdInstructionCallIssuer
+openssl ca -config ./pestoplaform-ca.pesto.io.crl.conf \
+-gencrl -crldays 365 -crl_hold holdInstructionCallIssuer
 
 # above gives an error
 # So I tweaked that the below works:
@@ -78,10 +78,7 @@ default_ca = myca
 dir = ./
 crlDistributionPoints=URI:http://example.com/pestoplaform-ca.pesto.io.root.crl
 database = \$dir/certindex
-default_md = sha2
-default_crl_days = 730
 EOF
-
 openssl ca -config ./pestoplaform-ca.pesto.io.crl.conf \
   -gencrl \
   -keyfile ./pestoplaform-ca.pesto.io.key \
