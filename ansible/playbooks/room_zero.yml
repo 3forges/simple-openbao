@@ -1,0 +1,21 @@
+---
+- name: Provision OpenBAO
+  hosts: [k8s-cluster]
+  any_errors_fatal: true
+  gather_facts: false
+  roles:
+    # ---
+    # ROOM-ZERO
+    - role: room_zero
+      force_recreate: "{{ force_recreate_room_zero }}"
+      room_zero_home: "{{ pesto_room_zero_home }}"
+      room_zero_bind_addr: "{{ pesto_room_zero_bind_addr }}"
+      room_zero_non_routed_ip_addr: "{{ pesto_room_zero_non_routed_ip_addr }}"
+      knd_net_name: "{{ pesto_knd_net_name }}"
+      openbao_fqdn: "{{ pesto_openbao_fqdn }}"
+      room_zero_container_name: "{{ pesto_room_zero_container_name }}"
+      openbao_tls_cert_path: "{{ pesto_room_zero_home }}/{{ pesto_openbao_fqdn }}.tls.crt"
+      openbao_tls_cert_key_path: "{{ pesto_room_zero_home }}/{{ pesto_openbao_fqdn }}.tls.key"
+      # room_zero_docker_compose_file_name: "{{ pesto_room_zero_docker_compose_file_name }}"
+
+
